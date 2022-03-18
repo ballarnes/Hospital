@@ -101,6 +101,8 @@ void FillTablesIfEmpty(IHost host)
                 command.Parameters.Add(endParam);
 
                 AddObject(command, nameof(Interval), app);
+
+                command.Parameters.Clear();
             }
         }
 
@@ -127,6 +129,8 @@ void FillTablesIfEmpty(IHost host)
                 command.Parameters.Add(descriptionParam);
 
                 AddObject(command, nameof(Specialization), app);
+
+                command.Parameters.Clear();
             }
         }
 
@@ -160,6 +164,8 @@ void FillTablesIfEmpty(IHost host)
                 command.Parameters.Add(specizalizationIdParam);
 
                 AddObject(command, nameof(Doctor), app);
+
+                command.Parameters.Clear();
             }
         }
 
