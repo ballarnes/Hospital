@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Host", "Hospital\Hospital.Host.csproj", "{73CFD8C7-56E0-40F1-96DB-15618268FD59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.UnitTests", "Hospital.UnitTests\Hospital.UnitTests.csproj", "{5F704BDB-A614-4713-AE44-98201F08B226}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hospital", "Hospital", "{F764B46E-D6BC-49F5-ABDA-EC24EC7FC5AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{622C16E5-7B16-4851-B8A3-584A0B0B07AD}"
+	ProjectSection(SolutionItems) = preProject
+		SolutionItems\10_DeleteDoctors.sql = SolutionItems\10_DeleteDoctors.sql
+		SolutionItems\11_DeleteAppointments.sql = SolutionItems\11_DeleteAppointments.sql
+		SolutionItems\1_CreateTables.sql = SolutionItems\1_CreateTables.sql
+		SolutionItems\2_AddOrUpdateOffices.sql = SolutionItems\2_AddOrUpdateOffices.sql
+		SolutionItems\3_AddOrUpdateIntervals.sql = SolutionItems\3_AddOrUpdateIntervals.sql
+		SolutionItems\4_AddOrUpdateSpecializations.sql = SolutionItems\4_AddOrUpdateSpecializations.sql
+		SolutionItems\5_AddOrUpdateDoctors.sql = SolutionItems\5_AddOrUpdateDoctors.sql
+		SolutionItems\6_AddOrUpdateAppointments.sql = SolutionItems\6_AddOrUpdateAppointments.sql
+		SolutionItems\7_DeleteOffices.sql = SolutionItems\7_DeleteOffices.sql
+		SolutionItems\8_DeleteIntervals.sql = SolutionItems\8_DeleteIntervals.sql
+		SolutionItems\9_DeleteSpecializations.sql = SolutionItems\9_DeleteSpecializations.sql
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73CFD8C7-56E0-40F1-96DB-15618268FD59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73CFD8C7-56E0-40F1-96DB-15618268FD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73CFD8C7-56E0-40F1-96DB-15618268FD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73CFD8C7-56E0-40F1-96DB-15618268FD59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F704BDB-A614-4713-AE44-98201F08B226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F704BDB-A614-4713-AE44-98201F08B226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F704BDB-A614-4713-AE44-98201F08B226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F704BDB-A614-4713-AE44-98201F08B226}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{73CFD8C7-56E0-40F1-96DB-15618268FD59} = {F764B46E-D6BC-49F5-ABDA-EC24EC7FC5AD}
+		{5F704BDB-A614-4713-AE44-98201F08B226} = {F764B46E-D6BC-49F5-ABDA-EC24EC7FC5AD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E1AD2502-D55E-4296-ADFE-AF745162AB8A}
+	EndGlobalSection
+EndGlobal
