@@ -17,5 +17,7 @@
         [Required]
         [Range(1, int.MaxValue)]
         public int SpecializationId { get; set; }
+
+        public SpecializationDto Specialization { get; set; } = null!;
     }
 }

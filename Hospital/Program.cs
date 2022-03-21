@@ -1,7 +1,12 @@
-using Dapper;
+using Hospital.Host;
 using Hospital.Host.Configurations;
+using Hospital.Host.Connection.Interfaces;
 using Hospital.Host.Data;
 using Hospital.Host.Data.Entities;
+using Hospital.Host.Repositories;
+using Hospital.Host.Repositories.Interfaces;
+using Hospital.Host.Services;
+using Hospital.Host.Services.Interfaces;
 
 var configuration = GetConfiguration();
 
@@ -14,6 +19,24 @@ builder.Services.Configure<HospitalConfig>(configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddTransient<IOfficeRepository, OfficeRepository>();
+builder.Services.AddTransient<IOfficeService, OfficeService>();
+
+builder.Services.AddTransient<IIntervalRepository, IntervalRepository>();
+builder.Services.AddTransient<IIntervalService, IntervalService>();
+
+builder.Services.AddTransient<ISpecializationRepository, SpecializationRepository>();
+builder.Services.AddTransient<ISpecializationService, SpecializationService>();
+
+builder.Services.AddTransient<IDoctorRepository, DoctorRepository>();
+builder.Services.AddTransient<IDoctorService, DoctorService>();
+
+builder.Services.AddTransient<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddTransient<IAppointmentService, AppointmentService>();
+
+builder.Services.AddScoped<IDbConnectionWrapper, DbConnectionWrapper>(provider => new DbConnectionWrapper(configuration["ConnectionString"]));
 
 var app = builder.Build();
 
@@ -47,18 +70,21 @@ IConfiguration GetConfiguration()
     return builder.Build();
 }
 
-void FillTablesIfEmpty(IHost host)
+async void FillTablesIfEmpty(IHost host)
 {
     using (var connection = new SqlConnection(configuration["ConnectionString"]))
     {
         connection.Open();
 
         var command = new SqlCommand();
+
         command.CommandType = CommandType.StoredProcedure;
+        command.Connection = connection;
 
         if (connection.Query<int>("SELECT COUNT(*) FROM Offices").FirstOrDefault() == 0)
         {
-            command = new SqlCommand("AddOrUpdateOffices", connection);
+            // command = new SqlCommand("EXEC AddOrUpdateOffices @number", connection);
+            command.CommandText = "AddOrUpdateOffices";
 
             var numberParam = new SqlParameter
             {
@@ -72,7 +98,7 @@ void FillTablesIfEmpty(IHost host)
 
                 command.Parameters.Add(numberParam);
 
-                AddObject(command, nameof(Office), app);
+                await AddObject(command, nameof(Office), app);
 
                 command.Parameters.Clear();
             }
@@ -80,16 +106,18 @@ void FillTablesIfEmpty(IHost host)
 
         if (connection.Query<int>("SELECT COUNT(*) FROM Intervals").FirstOrDefault() == 0)
         {
-            command = new SqlCommand("AddOrUpdateIntervals", connection);
+            command.CommandText = "AddOrUpdateIntervals";
 
             var startParam = new SqlParameter
             {
-                ParameterName = "@start"
+                ParameterName = "@start",
+                SqlDbType = SqlDbType.Time
             };
 
             var endParam = new SqlParameter
             {
-                ParameterName = "@end"
+                ParameterName = "@end",
+                SqlDbType = SqlDbType.Time
             };
 
             foreach (var interval in DbInitializer.GetPreconfiguredIntervals())
@@ -100,7 +128,7 @@ void FillTablesIfEmpty(IHost host)
                 command.Parameters.Add(startParam);
                 command.Parameters.Add(endParam);
 
-                AddObject(command, nameof(Interval), app);
+                await AddObject(command, nameof(Interval), app);
 
                 command.Parameters.Clear();
             }
@@ -108,16 +136,18 @@ void FillTablesIfEmpty(IHost host)
 
         if (connection.Query<int>("SELECT COUNT(*) FROM Specializations").FirstOrDefault() == 0)
         {
-            command = new SqlCommand("AddOrUpdateSpecializations", connection);
+            command.CommandText = "AddOrUpdateSpecializations";
 
             var nameParam = new SqlParameter
             {
-                ParameterName = "@name"
+                ParameterName = "@name",
+                SqlDbType = SqlDbType.NVarChar
             };
 
             var descriptionParam = new SqlParameter
             {
-                ParameterName = "@description"
+                ParameterName = "@description",
+                SqlDbType = SqlDbType.NVarChar
             };
 
             foreach (var specialization in DbInitializer.GetPreconfiguredSpecializations())
@@ -128,7 +158,7 @@ void FillTablesIfEmpty(IHost host)
                 command.Parameters.Add(nameParam);
                 command.Parameters.Add(descriptionParam);
 
-                AddObject(command, nameof(Specialization), app);
+                await AddObject(command, nameof(Specialization), app);
 
                 command.Parameters.Clear();
             }
@@ -136,21 +166,24 @@ void FillTablesIfEmpty(IHost host)
 
         if (connection.Query<int>("SELECT COUNT(*) FROM Doctors").FirstOrDefault() == 0)
         {
-            command = new SqlCommand("AddOrUpdateDoctors", connection);
+            command.CommandText = "AddOrUpdateDoctors";
 
             var nameParam = new SqlParameter
             {
-                ParameterName = "@name"
+                ParameterName = "@name",
+                SqlDbType = SqlDbType.NVarChar
             };
 
             var surnameParam = new SqlParameter
             {
-                ParameterName = "@surname"
+                ParameterName = "@surname",
+                SqlDbType = SqlDbType.NVarChar
             };
 
             var specizalizationIdParam = new SqlParameter
             {
-                ParameterName = "@specializationId"
+                ParameterName = "@specializationId",
+                SqlDbType = SqlDbType.Int
             };
 
             foreach (var doctor in DbInitializer.GetPreconfiguredDoctors())
@@ -163,7 +196,7 @@ void FillTablesIfEmpty(IHost host)
                 command.Parameters.Add(surnameParam);
                 command.Parameters.Add(specizalizationIdParam);
 
-                AddObject(command, nameof(Doctor), app);
+                await AddObject(command, nameof(Doctor), app);
 
                 command.Parameters.Clear();
             }
@@ -173,16 +206,24 @@ void FillTablesIfEmpty(IHost host)
     }
 }
 
-void AddObject(SqlCommand command, string objectName, IHost host)
+async Task AddObject(SqlCommand command, string objectName, IHost host)
 {
     var services = host.Services.CreateScope().ServiceProvider;
     var logger = services.GetRequiredService<ILogger<Program>>();
 
     try
     {
-        logger.LogInformation($"{command.CommandType} {command.Parameters[0].Value} {command.Parameters[0].Value.GetType()}");
-        var result = command.ExecuteScalar();
-        logger.LogInformation($"Created new {objectName} with ID: [{result}]");
+        var returnParam = new SqlParameter
+        {
+            ParameterName = "@id",
+            SqlDbType = SqlDbType.Int,
+            Direction = ParameterDirection.ReturnValue
+        };
+
+        command.Parameters.Add(returnParam);
+
+        await command.ExecuteNonQueryAsync();
+        logger.LogInformation($"Created new {objectName} with ID: [{returnParam.Value}]");
     }
     catch (SqlException ex)
     {

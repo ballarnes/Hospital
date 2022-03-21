@@ -2,18 +2,24 @@ IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateInt
 DROP PROCEDURE AddOrUpdateIntervals
 GO
 CREATE PROCEDURE AddOrUpdateIntervals
-    @id int,
-    @start smalldatetime,
-	@end smalldatetime
+    @start time,
+	@end time,
+	@id int = 0
 AS
 IF @id = 0
-	INSERT INTO Intervals(Id, [Start], [End]) 
-	VALUES(@id, @start, @end)
+	BEGIN
+		INSERT INTO Intervals([Start], [End]) 
+		VALUES(@start, @end)
+
+		SET @id = @@IDENTITY
+		RETURN @id
+	END
 ELSE
-	UPDATE Intervals
-	SET
-	Id = @id,
-	[Start] = @start,
-	[End] = @end
-SET @id = @@IDENTITY
-RETURN @id
+	BEGIN
+		UPDATE Intervals
+		SET
+		[Start] = @start,
+		[End] = @end
+		WHERE Id = @id
+		RETURN @id
+	END

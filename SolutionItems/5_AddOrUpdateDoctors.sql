@@ -2,20 +2,26 @@ IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateDoc
 DROP PROCEDURE AddOrUpdateDoctors
 GO
 CREATE PROCEDURE AddOrUpdateDoctors
-    @id int,
     @name nvarchar(50),
-	@surname nvarchar(100),
-	@specializationId int
+	@surname nvarchar(300),
+	@specializationId int,
+    @id int = 0
 AS
 IF @id = 0
-	INSERT INTO Doctors(Id, [Name], [Surname], [SpecializationId])
-	VALUES(@id, @name, @surname, @specializationId)
+	BEGIN
+		INSERT INTO Doctors([Name], [Surname], [SpecializationId])
+		VALUES(@name, @surname, @specializationId)
+
+		SET @id = @@IDENTITY
+		RETURN @id
+	END
 ELSE
-	UPDATE Doctors
-	SET
-	Id = @id,
-	[Name] = @name,
-	[Surname] = @surname,
-	[SpecializationId] = @specializationId
-SET @id = @@IDENTITY
-RETURN @id
+	BEGIN
+		UPDATE Doctors
+		SET
+		[Name] = @name,
+		[Surname] = @surname,
+		[SpecializationId] = @specializationId
+		WHERE Id = @id
+		RETURN @id
+	END

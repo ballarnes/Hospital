@@ -2,24 +2,30 @@ IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateApp
 DROP PROCEDURE AddOrUpdateAppointments
 GO
 CREATE PROCEDURE AddOrUpdateAppointments
-    @id int,
     @doctorId int,
 	@intervalId int,
 	@officeId int,
 	@date date,
-	@patientName nvarchar(50)
+	@patientName nvarchar(50),
+	@id int = 0
 AS
 IF @id = 0
-	INSERT INTO Appointments(Id, [DoctorId], [IntervalId], [OfficeId], [Date], [PatientName])
-	VALUES(@id, @doctorId, @intervalId, @officeId, @date, @patientName)
+	BEGIN
+		INSERT INTO Appointments([DoctorId], [IntervalId], [OfficeId], [Date], [PatientName])
+		VALUES(@doctorId, @intervalId, @officeId, @date, @patientName)
+
+		SET @id = @@IDENTITY
+		RETURN @id
+	END
 ELSE
-	UPDATE Appointments
-	SET
-	Id = @id,
-	[DoctorId] = @doctorId,
-	[IntervalId] = @intervalId,
-	[OfficeId] = @officeId,
-	[Date] = @date,
-	[PatientName] = @patientName
-SET @id = @@IDENTITY
-RETURN @id
+	BEGIN
+		UPDATE Appointments
+		SET
+		[DoctorId] = @doctorId,
+		[IntervalId] = @intervalId,
+		[OfficeId] = @officeId,
+		[Date] = @date,
+		[PatientName] = @patientName
+		WHERE Id = @id
+		RETURN @id
+	END

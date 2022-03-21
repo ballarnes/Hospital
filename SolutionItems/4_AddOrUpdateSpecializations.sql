@@ -2,18 +2,24 @@ IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateSpe
 DROP PROCEDURE AddOrUpdateSpecializations
 GO
 CREATE PROCEDURE AddOrUpdateSpecializations
-    @id int,
     @name nvarchar(50),
-	@description nvarchar(100)
+	@description nvarchar(300),
+	@id int = 0
 AS
 IF @id = 0
-	INSERT INTO Specializations(Id, [Name], [Description])
-	VALUES(@id, @name, @description)
+	BEGIN
+		INSERT INTO Specializations([Name], [Description])
+		VALUES(@name, @description)
+
+		SET @id = @@IDENTITY
+		RETURN @id
+	END
 ELSE
-	UPDATE Specializations
-	SET
-	Id = @id,
-	[Name] = @name,
-	[Description] = @description
-SET @id = @@IDENTITY
-RETURN @id
+	BEGIN
+		UPDATE Specializations
+		SET
+		[Name] = @name,
+		[Description] = @description
+		WHERE Id = @id
+		RETURN @id
+	END
