@@ -53,5 +53,53 @@ namespace Hospital.Host.Services
                 return mapped;
             });
         }
+
+        public async Task<IdResponse<int>?> AddInterval(TimeSpan start, TimeSpan end)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _intervalRepository.AddInterval(start, end);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateInterval(int id, TimeSpan start, TimeSpan end)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _intervalRepository.UpdateInterval(id, start, end);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteInterval(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _intervalRepository.DeleteInterval(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
     }
 }

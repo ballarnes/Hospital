@@ -37,78 +37,78 @@ namespace Hospital.Host.Data
             {
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 9, 0, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 9, 30, 0)
+                    Start = new TimeSpan(9, 0, 0),
+                    End = new TimeSpan(9, 30, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 9, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 10, 0, 0)
+                    Start = new TimeSpan(9, 30, 0),
+                    End = new TimeSpan(10, 0, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 10, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 11, 0, 0)
+                    Start = new TimeSpan(10, 0, 0),
+                    End = new TimeSpan(10, 30, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 11, 0, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 11, 30, 0)
+                    Start = new TimeSpan(10, 30, 0),
+                    End = new TimeSpan(11, 0, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 11, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 12, 0, 0)
+                    Start = new TimeSpan(11, 0, 0),
+                    End = new TimeSpan(11, 30, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 12, 0, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 12, 30, 0)
+                    Start = new TimeSpan(11, 30, 0),
+                    End = new TimeSpan(12, 0, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 12, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 13, 0, 0)
+                    Start = new TimeSpan(12, 0, 0),
+                    End = new TimeSpan(12, 30, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 14, 0, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 14, 30, 0)
+                    Start = new TimeSpan(12, 30, 0),
+                    End = new TimeSpan(13, 0, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 14, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 15, 0, 0)
+                    Start = new TimeSpan(14, 0, 0),
+                    End = new TimeSpan(14, 30, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 15, 0, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 15, 30, 0)
+                    Start = new TimeSpan(14, 30, 0),
+                    End = new TimeSpan(15, 0, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 15, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 16, 0, 0)
+                    Start = new TimeSpan(15, 30, 0),
+                    End = new TimeSpan(16, 0, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 16, 0, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 16, 30, 0)
+                    Start = new TimeSpan(16, 0, 0),
+                    End = new TimeSpan(16, 30, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 16, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 17, 0, 0)
+                    Start = new TimeSpan(16, 30, 0),
+                    End = new TimeSpan(17, 0, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 17, 0, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 17, 30, 0)
+                    Start = new TimeSpan(17, 0, 0),
+                    End = new TimeSpan(17, 30, 0)
                 },
                 new Interval()
                 {
-                    Start = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 17, 30, 0),
-                    End = new DateTime(DateTime.MinValue.Year, DateTime.MinValue.Month, DateTime.MinValue.Day, 18, 0, 0)
+                    Start = new TimeSpan(17, 30, 0),
+                    End = new TimeSpan(18, 0, 0)
                 }
             };
         }

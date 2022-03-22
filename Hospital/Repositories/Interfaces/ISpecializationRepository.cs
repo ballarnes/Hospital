@@ -7,5 +7,8 @@ namespace Hospital.Host.Repositories.Interfaces
     {
         Task<PaginatedItems<SpecializationDto>> GetSpecializations(int pageIndex, int pageSize);
         Task<SpecializationDto?> GetSpecializationById(int id);
+        Task<int?> AddSpecialization(string name, string description);
+        Task<int?> UpdateSpecialization(int id, string name, string description);
+        Task<int?> DeleteSpecialization(int id);
     }
 }

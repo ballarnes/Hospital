@@ -74,5 +74,128 @@ namespace Hospital.Host.Repositories
                 Specialization = doctor.Specialization
             };
         }
+
+        public async Task<int?> AddDoctor(string name, string surname, int specializationId)
+        {
+            var command = new SqlCommand("AddOrUpdateDoctors");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var nameParam = new SqlParameter
+            {
+                ParameterName = "@name",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = name
+            };
+
+            var surnameParam = new SqlParameter
+            {
+                ParameterName = "@surname",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = surname
+            };
+
+            var specizalizationIdParam = new SqlParameter
+            {
+                ParameterName = "@specializationId",
+                SqlDbType = SqlDbType.Int,
+                Value = specializationId
+            };
+
+            var returnParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.ReturnValue
+            };
+
+            command.Parameters.Add(nameParam);
+            command.Parameters.Add(surnameParam);
+            command.Parameters.Add(specizalizationIdParam);
+            command.Parameters.Add(returnParam);
+
+            await command.ExecuteNonQueryAsync();
+
+            if (returnParam.Value == null)
+            {
+                return null;
+            }
+
+            return (int)returnParam.Value;
+        }
+
+        public async Task<int?> UpdateDoctor(int id, string name, string surname, int specializationId)
+        {
+            var command = new SqlCommand("AddOrUpdateDoctors");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            var nameParam = new SqlParameter
+            {
+                ParameterName = "@name",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = name
+            };
+
+            var surnameParam = new SqlParameter
+            {
+                ParameterName = "@surname",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = surname
+            };
+
+            var specizalizationIdParam = new SqlParameter
+            {
+                ParameterName = "@specializationId",
+                SqlDbType = SqlDbType.Int,
+                Value = specializationId
+            };
+
+            command.Parameters.Add(idParam);
+            command.Parameters.Add(nameParam);
+            command.Parameters.Add(surnameParam);
+            command.Parameters.Add(specizalizationIdParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
+        }
+
+        public async Task<int?> DeleteDoctor(int id)
+        {
+            var command = new SqlCommand("DeleteDoctors");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            command.Parameters.Add(idParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
+        }
     }
 }

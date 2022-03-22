@@ -49,8 +49,62 @@ namespace Hospital.Host.Services
             return await ExecuteSafe(async () =>
             {
                 var result = await _officeRepository.GetOfficeById(id);
+
+                if (result == null)
+                {
+                    return null;
+                }
+
                 var mapped = _mapper.Map<OfficeDto>(result);
                 return mapped;
+            });
+        }
+
+        public async Task<IdResponse<int>?> AddOffice(int number)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _officeRepository.AddOffice(number);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateOffice(int id, int number)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _officeRepository.UpdateOffice(id, number);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteOffice(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _officeRepository.DeleteOffice(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
             });
         }
     }

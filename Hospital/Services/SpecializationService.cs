@@ -53,5 +53,53 @@ namespace Hospital.Host.Services
                 return mapped;
             });
         }
+
+        public async Task<IdResponse<int>?> AddSpecialization(string name, string description)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _specializationRepository.AddSpecialization(name, description);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateSpecialization(int id, string name, string description)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _specializationRepository.UpdateSpecialization(id, name, description);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteSpecialization(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _specializationRepository.DeleteSpecialization(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
     }
 }

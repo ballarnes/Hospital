@@ -1,7 +1,9 @@
-﻿namespace Hospital.Host.Data.Entities
+﻿namespace Hospital.Host.Models.Requests
 {
-    public class Interval
+    public class UpdateIntervalRequest
     {
+        [Required]
+        [Range(0, int.MaxValue)]
         public int Id { get; set; }
 
         public TimeSpan Start { get; set; }

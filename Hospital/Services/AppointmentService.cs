@@ -53,5 +53,53 @@ namespace Hospital.Host.Services
                 return mapped;
             });
         }
+
+        public async Task<IdResponse<int>?> AddAppointment(int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.AddAppointment(doctorId, intervalId, officeId, date, patientName);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateAppointment(int id, int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.UpdateAppointment(id, doctorId, intervalId, officeId, date, patientName);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteAppointment(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.DeleteAppointment(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
     }
 }

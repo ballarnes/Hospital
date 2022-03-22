@@ -7,5 +7,8 @@ namespace Hospital.Host.Repositories.Interfaces
     {
         Task<PaginatedItems<OfficeDto>> GetOffices(int pageIndex, int pageSize);
         Task<OfficeDto?> GetOfficeById(int id);
+        Task<int?> AddOffice(int number);
+        Task<int?> UpdateOffice(int id, int number);
+        Task<int?> DeleteOffice(int id);
     }
 }

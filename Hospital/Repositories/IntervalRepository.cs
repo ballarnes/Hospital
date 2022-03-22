@@ -50,5 +50,112 @@ namespace Hospital.Host.Repositories
                 End = interval.End
             };
         }
+
+        public async Task<int?> AddInterval(TimeSpan start, TimeSpan end)
+        {
+            var command = new SqlCommand("AddOrUpdateIntervals");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var startParam = new SqlParameter
+            {
+                ParameterName = "@start",
+                SqlDbType = SqlDbType.Time,
+                Value = start
+            };
+
+            var endParam = new SqlParameter
+            {
+                ParameterName = "@end",
+                SqlDbType = SqlDbType.Time,
+                Value = end
+            };
+
+            var returnParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.ReturnValue
+            };
+
+            command.Parameters.Add(startParam);
+            command.Parameters.Add(endParam);
+            command.Parameters.Add(returnParam);
+
+            await command.ExecuteNonQueryAsync();
+
+            if (returnParam.Value == null)
+            {
+                return null;
+            }
+
+            return (int)returnParam.Value;
+        }
+
+        public async Task<int?> UpdateInterval(int id, TimeSpan start, TimeSpan end)
+        {
+            var command = new SqlCommand("AddOrUpdateIntervals");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            var startParam = new SqlParameter
+            {
+                ParameterName = "@start",
+                SqlDbType = SqlDbType.Time,
+                Value = start
+            };
+
+            var endParam = new SqlParameter
+            {
+                ParameterName = "@end",
+                SqlDbType = SqlDbType.Time,
+                Value = end
+            };
+
+            command.Parameters.Add(idParam);
+            command.Parameters.Add(startParam);
+            command.Parameters.Add(endParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
+        }
+
+        public async Task<int?> DeleteInterval(int id)
+        {
+            var command = new SqlCommand("DeleteIntervals");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            command.Parameters.Add(idParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
+        }
     }
 }

@@ -49,5 +49,96 @@ namespace Hospital.Host.Repositories
                 Number = office.Number
             };
         }
+
+        public async Task<int?> AddOffice(int number)
+        {
+            var command = new SqlCommand("AddOrUpdateOffices");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var numberParam = new SqlParameter
+            {
+                ParameterName = "@number",
+                SqlDbType = SqlDbType.Int,
+                Value = number
+            };
+
+            var returnParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.ReturnValue
+            };
+
+            command.Parameters.Add(numberParam);
+            command.Parameters.Add(returnParam);
+
+            await command.ExecuteNonQueryAsync();
+
+            if (returnParam.Value == null)
+            {
+                return null;
+            }
+
+            return (int)returnParam.Value;
+        }
+
+        public async Task<int?> UpdateOffice(int id, int number)
+        {
+            var command = new SqlCommand("AddOrUpdateOffices");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            var numberParam = new SqlParameter
+            {
+                ParameterName = "@number",
+                SqlDbType = SqlDbType.Int,
+                Value = number
+            };
+
+            command.Parameters.Add(idParam);
+            command.Parameters.Add(numberParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
+        }
+
+        public async Task<int?> DeleteOffice(int id)
+        {
+            var command = new SqlCommand("DeleteOffices");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            command.Parameters.Add(idParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
+        }
     }
 }

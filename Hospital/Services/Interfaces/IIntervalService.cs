@@ -7,5 +7,8 @@ namespace Hospital.Host.Services.Interfaces
     {
         Task<PaginatedItemsResponse<IntervalDto>?> GetIntervals(int pageIndex, int pageSize);
         Task<IntervalDto?> GetIntervalById(int id);
+        Task<IdResponse<int>?> AddInterval(TimeSpan start, TimeSpan end);
+        Task<int?> UpdateInterval(int id, TimeSpan start, TimeSpan end);
+        Task<int?> DeleteInterval(int id);
     }
 }

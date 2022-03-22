@@ -83,7 +83,6 @@ async void FillTablesIfEmpty(IHost host)
 
         if (connection.Query<int>("SELECT COUNT(*) FROM Offices").FirstOrDefault() == 0)
         {
-            // command = new SqlCommand("EXEC AddOrUpdateOffices @number", connection);
             command.CommandText = "AddOrUpdateOffices";
 
             var numberParam = new SqlParameter
@@ -122,8 +121,8 @@ async void FillTablesIfEmpty(IHost host)
 
             foreach (var interval in DbInitializer.GetPreconfiguredIntervals())
             {
-                startParam.Value = interval.Start.ToShortTimeString();
-                endParam.Value = interval.End.ToShortTimeString();
+                startParam.Value = interval.Start;
+                endParam.Value = interval.End;
 
                 command.Parameters.Add(startParam);
                 command.Parameters.Add(endParam);
