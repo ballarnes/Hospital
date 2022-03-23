@@ -27,5 +27,4 @@ ELSE
 		[Date] = @date,
 		[PatientName] = @patientName
 		WHERE Id = @id
-		RETURN @id
 	END

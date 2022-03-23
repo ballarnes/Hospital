@@ -21,5 +21,4 @@ ELSE
 		[Name] = @name,
 		[Description] = @description
 		WHERE Id = @id
-		RETURN @id
 	END

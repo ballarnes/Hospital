@@ -39,7 +39,7 @@ namespace Hospital.Host.Services
                     PageSize = pageSize,
                     PagesCount = result.PagesCount,
                     TotalCount = result.TotalCount,
-                    Data = result.Data
+                    Data = result.Data.Select(s => _mapper.Map<IntervalDto>(s)).ToList()
                 };
             });
         }
@@ -51,6 +51,54 @@ namespace Hospital.Host.Services
                 var result = await _intervalRepository.GetIntervalById(id);
                 var mapped = _mapper.Map<IntervalDto>(result);
                 return mapped;
+            });
+        }
+
+        public async Task<IdResponse<int>?> AddInterval(TimeSpan start, TimeSpan end)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _intervalRepository.AddInterval(start, end);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateInterval(int id, TimeSpan start, TimeSpan end)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _intervalRepository.UpdateInterval(id, start, end);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteInterval(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _intervalRepository.DeleteInterval(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
             });
         }
     }

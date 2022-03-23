@@ -39,7 +39,7 @@ namespace Hospital.Host.Services
                     PageSize = pageSize,
                     PagesCount = result.PagesCount,
                     TotalCount = result.TotalCount,
-                    Data = result.Data
+                    Data = result.Data.Select(s => _mapper.Map<AppointmentDto>(s)).ToList()
                 };
             });
         }
@@ -51,6 +51,54 @@ namespace Hospital.Host.Services
                 var result = await _appointmentRepository.GetAppointmentById(id);
                 var mapped = _mapper.Map<AppointmentDto>(result);
                 return mapped;
+            });
+        }
+
+        public async Task<IdResponse<int>?> AddAppointment(int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.AddAppointment(doctorId, intervalId, officeId, date, patientName);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateAppointment(int id, int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.UpdateAppointment(id, doctorId, intervalId, officeId, date, patientName);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteAppointment(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.DeleteAppointment(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
             });
         }
     }

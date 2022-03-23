@@ -2,16 +2,21 @@ IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateOff
 DROP PROCEDURE AddOrUpdateOffices
 GO
 CREATE PROCEDURE AddOrUpdateOffices
-    @id int,
-    @number int
+    @number int,
+	@id int = 0
 AS
 IF @id = 0
-	INSERT INTO Offices(Id, Number) 
-	VALUES(@id, @number)
+	BEGIN
+		INSERT INTO Offices(Number) 
+		VALUES(@number)
+
+		SET @id = @@IDENTITY
+		RETURN @id
+	END
 ELSE
-	UPDATE Offices
-	SET
-	Id = @id,
-	[Number] = @number
-SET @id = @@IDENTITY
-RETURN @id
+	BEGIN
+		UPDATE Offices
+		SET
+		[Number] = @number
+		WHERE Id = @id
+	END

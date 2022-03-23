@@ -1,5 +1,6 @@
 ﻿using Hospital.Host.Connection.Interfaces;
 using Hospital.Host.Data;
+using Hospital.Host.Data.Entities;
 using Hospital.Host.Models.Dtos;
 using Hospital.Host.Repositories.Interfaces;
 
@@ -15,46 +16,49 @@ namespace Hospital.Host.Repositories
             _connection = connection;
         }
 
-        public async Task<PaginatedItems<AppointmentDto>> GetAppointments(int pageIndex, int pageSize)
+        public async Task<PaginatedItems<Appointment>> GetAppointments(int pageIndex, int pageSize)
         {
             var totalCount = await _connection.Connection
                     .QueryAsync<int>("SELECT COUNT(*) FROM Appointments");
 
             var result = await _connection.Connection
-                .QueryAsync<AppointmentDto, DoctorDto, IntervalDto, OfficeDto, AppointmentDto>(@$"
-                SELECT a.*, d.*, i.*, o.*
+                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
+                SELECT a.*, d.*, s.*, i.*, o.*
                 FROM Appointments a
                 INNER JOIN Doctors d ON a.DoctorId = d.Id
+                INNER JOIN Specializations s ON d.SpecializationId = s.Id
                 INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
                 ORDER BY a.Id
                 OFFSET {pageIndex * pageSize} ROWS
-                FETCH NEXT {pageSize} ROWS ONLY", (a, d, i, o) =>
+                FETCH NEXT {pageSize} ROWS ONLY", (a, d, s, i, o) =>
                 {
                     var appointment = a;
 
                     if (appointment.Doctor == null)
                     {
-                        appointment.Doctor = new DoctorDto();
+                        appointment.Doctor = d;
+                    }
+
+                    if (appointment.Doctor.Specialization == null)
+                    {
+                        appointment.Doctor.Specialization = s;
                     }
 
                     if (appointment.Interval == null)
                     {
-                        appointment.Interval = new IntervalDto();
+                        appointment.Interval = i;
                     }
 
                     if (appointment.Office == null)
                     {
-                        appointment.Office = new OfficeDto();
+                        appointment.Office = o;
                     }
 
-                    appointment.Doctor = d;
-                    appointment.Interval = i;
-                    appointment.Office = o;
                     return appointment;
                 });
 
-            return new PaginatedItems<AppointmentDto>()
+            return new PaginatedItems<Appointment>()
             {
                 PagesCount = (int)Math.Round((Convert.ToDecimal(totalCount.FirstOrDefault()) / pageSize), MidpointRounding.ToPositiveInfinity),
                 TotalCount = totalCount.FirstOrDefault(),
@@ -62,37 +66,40 @@ namespace Hospital.Host.Repositories
             };
         }
 
-        public async Task<AppointmentDto?> GetAppointmentById(int id)
+        public async Task<Appointment?> GetAppointmentById(int id)
         {
             var result = await _connection.Connection
-                .QueryAsync<AppointmentDto, DoctorDto, IntervalDto, OfficeDto, AppointmentDto>(@$"
-                SELECT a.*, d.*, i.*, o.*
+                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
+                SELECT a.*, d.*, s.*, i.*, o.*
                 FROM Appointments a
                 INNER JOIN Doctors d ON a.DoctorId = d.Id
+                INNER JOIN Specializations s ON d.SpecializationId = s.Id
                 INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
-                WHERE d.Id = {id}", (a, d, i, o) =>
+                WHERE d.Id = {id}", (a, d, s, i, o) =>
                 {
                     var appointment = a;
 
                     if (appointment.Doctor == null)
                     {
-                        appointment.Doctor = new DoctorDto();
+                        appointment.Doctor = d;
+                    }
+
+                    if (appointment.Doctor.Specialization == null)
+                    {
+                        appointment.Doctor.Specialization = s;
                     }
 
                     if (appointment.Interval == null)
                     {
-                        appointment.Interval = new IntervalDto();
+                        appointment.Interval = i;
                     }
 
                     if (appointment.Office == null)
                     {
-                        appointment.Office = new OfficeDto();
+                        appointment.Office = o;
                     }
 
-                    appointment.Doctor = d;
-                    appointment.Interval = i;
-                    appointment.Office = o;
                     return appointment;
                 });
 
@@ -103,7 +110,7 @@ namespace Hospital.Host.Repositories
                 return null;
             }
 
-            return new AppointmentDto()
+            return new Appointment()
             {
                 Id = doctor.Id,
                 Date = doctor.Date,
@@ -115,6 +122,161 @@ namespace Hospital.Host.Repositories
                 OfficeId = doctor.OfficeId,
                 Office = doctor.Office
             };
+        }
+
+        public async Task<int?> AddAppointment(int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        {
+            var command = new SqlCommand("AddOrUpdateAppointments");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var doctorIdParam = new SqlParameter
+            {
+                ParameterName = "@doctorId",
+                SqlDbType = SqlDbType.Int,
+                Value = doctorId
+            };
+
+            var intervalIdParam = new SqlParameter
+            {
+                ParameterName = "@intervalId",
+                SqlDbType = SqlDbType.Int,
+                Value = intervalId
+            };
+
+            var officeIdParam = new SqlParameter
+            {
+                ParameterName = "@officeId",
+                SqlDbType = SqlDbType.Int,
+                Value = officeId
+            };
+
+            var dateParam = new SqlParameter
+            {
+                ParameterName = "@date",
+                SqlDbType = SqlDbType.Date,
+                Value = date
+            };
+
+            var patientNameParam = new SqlParameter
+            {
+                ParameterName = "@patientName",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = patientName
+            };
+
+            var returnParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.ReturnValue
+            };
+
+            command.Parameters.Add(doctorIdParam);
+            command.Parameters.Add(intervalIdParam);
+            command.Parameters.Add(officeIdParam);
+            command.Parameters.Add(dateParam);
+            command.Parameters.Add(patientNameParam);
+            command.Parameters.Add(returnParam);
+
+            await command.ExecuteNonQueryAsync();
+
+            if (returnParam.Value == null)
+            {
+                return null;
+            }
+
+            return (int)returnParam.Value;
+        }
+
+        public async Task<int?> UpdateAppointment(int id, int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        {
+            var command = new SqlCommand("AddOrUpdateAppointments");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            var doctorIdParam = new SqlParameter
+            {
+                ParameterName = "@doctorId",
+                SqlDbType = SqlDbType.Int,
+                Value = doctorId
+            };
+
+            var intervalIdParam = new SqlParameter
+            {
+                ParameterName = "@intervalId",
+                SqlDbType = SqlDbType.Int,
+                Value = intervalId
+            };
+
+            var officeIdParam = new SqlParameter
+            {
+                ParameterName = "@officeId",
+                SqlDbType = SqlDbType.Int,
+                Value = officeId
+            };
+
+            var dateParam = new SqlParameter
+            {
+                ParameterName = "@date",
+                SqlDbType = SqlDbType.Date,
+                Value = date
+            };
+
+            var patientNameParam = new SqlParameter
+            {
+                ParameterName = "@patientName",
+                SqlDbType = SqlDbType.NVarChar,
+                Value = patientName
+            };
+
+            command.Parameters.Add(idParam);
+            command.Parameters.Add(doctorIdParam);
+            command.Parameters.Add(intervalIdParam);
+            command.Parameters.Add(officeIdParam);
+            command.Parameters.Add(dateParam);
+            command.Parameters.Add(patientNameParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
+        }
+
+        public async Task<int?> DeleteAppointment(int id)
+        {
+            var command = new SqlCommand("DeleteAppointments");
+            command.CommandType = CommandType.StoredProcedure;
+            command.Connection = (SqlConnection)_connection.Connection;
+
+            var idParam = new SqlParameter
+            {
+                ParameterName = "@id",
+                SqlDbType = SqlDbType.Int,
+                Value = id
+            };
+
+            command.Parameters.Add(idParam);
+
+            var result = await command.ExecuteNonQueryAsync();
+
+            if (result == default)
+            {
+                return null;
+            }
+
+            return result;
         }
     }
 }

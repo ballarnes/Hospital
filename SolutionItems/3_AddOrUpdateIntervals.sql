@@ -21,5 +21,4 @@ ELSE
 		[Start] = @start,
 		[End] = @end
 		WHERE Id = @id
-		RETURN @id
 	END

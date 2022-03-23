@@ -39,7 +39,7 @@ namespace Hospital.Host.Services
                     PageSize = pageSize,
                     PagesCount = result.PagesCount,
                     TotalCount = result.TotalCount,
-                    Data = result.Data
+                    Data = result.Data.Select(s => _mapper.Map<DoctorDto>(s)).ToList()
                 };
             });
         }
@@ -51,6 +51,54 @@ namespace Hospital.Host.Services
                 var result = await _doctorRepository.GetDoctorById(id);
                 var mapped = _mapper.Map<DoctorDto>(result);
                 return mapped;
+            });
+        }
+
+        public async Task<IdResponse<int>?> AddDoctor(string name, string surname, int specializationId)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _doctorRepository.AddDoctor(name, surname, specializationId);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateDoctor(int id, string name, string surname, int specializationId)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _doctorRepository.UpdateDoctor(id, name, surname, specializationId);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteDoctor(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _doctorRepository.DeleteDoctor(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
             });
         }
     }

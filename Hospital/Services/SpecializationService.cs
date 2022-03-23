@@ -39,7 +39,7 @@ namespace Hospital.Host.Services
                     PageSize = pageSize,
                     PagesCount = result.PagesCount,
                     TotalCount = result.TotalCount,
-                    Data = result.Data
+                    Data = result.Data.Select(s => _mapper.Map<SpecializationDto>(s)).ToList()
                 };
             });
         }
@@ -51,6 +51,54 @@ namespace Hospital.Host.Services
                 var result = await _specializationRepository.GetSpecializationById(id);
                 var mapped = _mapper.Map<SpecializationDto>(result);
                 return mapped;
+            });
+        }
+
+        public async Task<IdResponse<int>?> AddSpecialization(string name, string description)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _specializationRepository.AddSpecialization(name, description);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return new IdResponse<int>()
+                {
+                    Id = result.Value
+                };
+            });
+        }
+
+        public async Task<int?> UpdateSpecialization(int id, string name, string description)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _specializationRepository.UpdateSpecialization(id, name, description);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
+            });
+        }
+
+        public async Task<int?> DeleteSpecialization(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _specializationRepository.DeleteSpecialization(id);
+
+                if (result == default)
+                {
+                    return null;
+                }
+
+                return result;
             });
         }
     }

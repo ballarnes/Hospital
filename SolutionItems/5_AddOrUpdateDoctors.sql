@@ -23,5 +23,4 @@ ELSE
 		[Surname] = @surname,
 		[SpecializationId] = @specializationId
 		WHERE Id = @id
-		RETURN @id
 	END
