@@ -1,5 +1,6 @@
 ﻿using Hospital.Host.Connection.Interfaces;
 using Hospital.Host.Data;
+using Hospital.Host.Data.Entities;
 using Hospital.Host.Models.Dtos;
 using Hospital.Host.Repositories.Interfaces;
 
@@ -15,13 +16,13 @@ namespace Hospital.Host.Repositories
             _connection = connection;
         }
 
-        public async Task<PaginatedItems<AppointmentDto>> GetAppointments(int pageIndex, int pageSize)
+        public async Task<PaginatedItems<Appointment>> GetAppointments(int pageIndex, int pageSize)
         {
             var totalCount = await _connection.Connection
                     .QueryAsync<int>("SELECT COUNT(*) FROM Appointments");
 
             var result = await _connection.Connection
-                .QueryAsync<AppointmentDto, DoctorDto, SpecializationDto, IntervalDto, OfficeDto, AppointmentDto>(@$"
+                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
                 SELECT a.*, d.*, s.*, i.*, o.*
                 FROM Appointments a
                 INNER JOIN Doctors d ON a.DoctorId = d.Id
@@ -57,7 +58,7 @@ namespace Hospital.Host.Repositories
                     return appointment;
                 });
 
-            return new PaginatedItems<AppointmentDto>()
+            return new PaginatedItems<Appointment>()
             {
                 PagesCount = (int)Math.Round((Convert.ToDecimal(totalCount.FirstOrDefault()) / pageSize), MidpointRounding.ToPositiveInfinity),
                 TotalCount = totalCount.FirstOrDefault(),
@@ -65,10 +66,10 @@ namespace Hospital.Host.Repositories
             };
         }
 
-        public async Task<AppointmentDto?> GetAppointmentById(int id)
+        public async Task<Appointment?> GetAppointmentById(int id)
         {
             var result = await _connection.Connection
-                .QueryAsync<AppointmentDto, DoctorDto, SpecializationDto, IntervalDto, OfficeDto, AppointmentDto>(@$"
+                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
                 SELECT a.*, d.*, s.*, i.*, o.*
                 FROM Appointments a
                 INNER JOIN Doctors d ON a.DoctorId = d.Id
@@ -109,7 +110,7 @@ namespace Hospital.Host.Repositories
                 return null;
             }
 
-            return new AppointmentDto()
+            return new Appointment()
             {
                 Id = doctor.Id,
                 Date = doctor.Date,

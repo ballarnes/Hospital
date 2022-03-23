@@ -1,5 +1,6 @@
 ﻿using Hospital.Host.Connection.Interfaces;
 using Hospital.Host.Data;
+using Hospital.Host.Data.Entities;
 using Hospital.Host.Models.Dtos;
 using Hospital.Host.Repositories.Interfaces;
 
@@ -15,15 +16,15 @@ namespace Hospital.Host.Repositories
             _connection = connection;
         }
 
-        public async Task<PaginatedItems<OfficeDto>> GetOffices(int pageIndex, int pageSize)
+        public async Task<PaginatedItems<Office>> GetOffices(int pageIndex, int pageSize)
         {
             var totalCount = await _connection.Connection
                     .QueryAsync<int>("SELECT COUNT(*) FROM Offices");
 
             var result = await _connection.Connection
-                .QueryAsync<OfficeDto>($"SELECT * FROM Offices ORDER BY Id OFFSET {pageIndex * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                .QueryAsync<Office>($"SELECT * FROM Offices ORDER BY Id OFFSET {pageIndex * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
-            return new PaginatedItems<OfficeDto>()
+            return new PaginatedItems<Office>()
             {
                 PagesCount = (int)Math.Round((Convert.ToDecimal(totalCount.FirstOrDefault()) / pageSize), MidpointRounding.ToPositiveInfinity),
                 TotalCount = totalCount.FirstOrDefault(),
@@ -31,10 +32,10 @@ namespace Hospital.Host.Repositories
             };
         }
 
-        public async Task<OfficeDto?> GetOfficeById(int id)
+        public async Task<Office?> GetOfficeById(int id)
         {
             var result = await _connection.Connection
-                .QueryAsync<OfficeDto>($"SELECT * FROM Offices WHERE Id = {id}");
+                .QueryAsync<Office>($"SELECT * FROM Offices WHERE Id = {id}");
 
             var office = result.FirstOrDefault();
 
@@ -43,7 +44,7 @@ namespace Hospital.Host.Repositories
                 return null;
             }
 
-            return new OfficeDto()
+            return new Office()
             {
                 Id = office.Id,
                 Number = office.Number

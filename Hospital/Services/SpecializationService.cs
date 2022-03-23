@@ -39,7 +39,7 @@ namespace Hospital.Host.Services
                     PageSize = pageSize,
                     PagesCount = result.PagesCount,
                     TotalCount = result.TotalCount,
-                    Data = result.Data
+                    Data = result.Data.Select(s => _mapper.Map<SpecializationDto>(s)).ToList()
                 };
             });
         }

@@ -1,5 +1,6 @@
 ﻿using Hospital.Host.Connection.Interfaces;
 using Hospital.Host.Data;
+using Hospital.Host.Data.Entities;
 using Hospital.Host.Models.Dtos;
 using Hospital.Host.Repositories.Interfaces;
 
@@ -15,15 +16,15 @@ namespace Hospital.Host.Repositories
             _connection = connection;
         }
 
-        public async Task<PaginatedItems<IntervalDto>> GetIntervals(int pageIndex, int pageSize)
+        public async Task<PaginatedItems<Interval>> GetIntervals(int pageIndex, int pageSize)
         {
             var totalCount = await _connection.Connection
                     .QueryAsync<int>("SELECT COUNT(*) FROM Intervals");
 
             var result = await _connection.Connection
-                .QueryAsync<IntervalDto>($"SELECT * FROM Intervals ORDER BY Id OFFSET {pageIndex * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                .QueryAsync<Interval>($"SELECT * FROM Intervals ORDER BY Id OFFSET {pageIndex * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
-            return new PaginatedItems<IntervalDto>()
+            return new PaginatedItems<Interval>()
             {
                 PagesCount = (int)Math.Round((Convert.ToDecimal(totalCount.FirstOrDefault()) / pageSize), MidpointRounding.ToPositiveInfinity),
                 TotalCount = totalCount.FirstOrDefault(),
@@ -31,10 +32,10 @@ namespace Hospital.Host.Repositories
             };
         }
 
-        public async Task<IntervalDto?> GetIntervalById(int id)
+        public async Task<Interval?> GetIntervalById(int id)
         {
             var result = await _connection.Connection
-                .QueryAsync<IntervalDto>($"SELECT * FROM Intervals WHERE Id = {id}");
+                .QueryAsync<Interval>($"SELECT * FROM Intervals WHERE Id = {id}");
 
             var interval = result.FirstOrDefault();
 
@@ -43,7 +44,7 @@ namespace Hospital.Host.Repositories
                 return null;
             }
 
-            return new IntervalDto()
+            return new Interval()
             {
                 Id = interval.Id,
                 Start = interval.Start,

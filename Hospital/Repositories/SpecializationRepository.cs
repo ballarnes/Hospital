@@ -1,5 +1,6 @@
 ﻿using Hospital.Host.Connection.Interfaces;
 using Hospital.Host.Data;
+using Hospital.Host.Data.Entities;
 using Hospital.Host.Models.Dtos;
 using Hospital.Host.Repositories.Interfaces;
 
@@ -15,15 +16,15 @@ namespace Hospital.Host.Repositories
             _connection = connection;
         }
 
-        public async Task<PaginatedItems<SpecializationDto>> GetSpecializations(int pageIndex, int pageSize)
+        public async Task<PaginatedItems<Specialization>> GetSpecializations(int pageIndex, int pageSize)
         {
             var totalCount = await _connection.Connection
                     .QueryAsync<int>("SELECT COUNT(*) FROM Specializations");
 
             var result = await _connection.Connection
-                .QueryAsync<SpecializationDto>($"SELECT * FROM Specializations ORDER BY Id OFFSET {pageIndex * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY");
+                .QueryAsync<Specialization>($"SELECT * FROM Specializations ORDER BY Id OFFSET {pageIndex * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY");
 
-            return new PaginatedItems<SpecializationDto>()
+            return new PaginatedItems<Specialization>()
             {
                 PagesCount = (int)Math.Round((Convert.ToDecimal(totalCount.FirstOrDefault()) / pageSize), MidpointRounding.ToPositiveInfinity),
                 TotalCount = totalCount.FirstOrDefault(),
@@ -31,7 +32,7 @@ namespace Hospital.Host.Repositories
             };
         }
 
-        public async Task<SpecializationDto?> GetSpecializationById(int id)
+        public async Task<Specialization?> GetSpecializationById(int id)
         {
             var result = await _connection.Connection
                 .QueryAsync<SpecializationDto>($"SELECT * FROM Specializations WHERE Id = {id}");
@@ -43,7 +44,7 @@ namespace Hospital.Host.Repositories
                 return null;
             }
 
-            return new SpecializationDto()
+            return new Specialization()
             {
                 Id = specialization.Id,
                 Name = specialization.Name,
