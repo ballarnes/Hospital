@@ -152,6 +152,79 @@
         }
 
         [Fact]
+        public async Task GetFreeIntervalsByDoctorDate_Success()
+        {
+            // arrange
+            var testPageIndex = 0;
+            var testPageSize = 1;
+            var testPagesCount = 1;
+            var testTotalCount = 1;
+            var testDateTime = DateTime.UtcNow;
+            var testDoctorId = 1;
+
+            var paginatedItemsSuccess = new PaginatedItems<Interval>()
+            {
+                Data = new List<Interval>()
+                {
+                    _testInterval
+                },
+                TotalCount = testTotalCount,
+                PagesCount = testPagesCount
+            };
+
+            var intervalSuccess = new Interval()
+            {
+                Id = _testInterval.Id,
+                Start = _testInterval.Start,
+                End = _testInterval.End
+            };
+
+            var intervalDtoSuccess = new IntervalDto()
+            {
+                Id = _testInterval.Id,
+                Start = _testInterval.Start,
+                End = _testInterval.End
+            };
+
+            _intervalRepository.Setup(s => s.GetFreeIntervalsByDoctorDate(
+                It.Is<int>(i => i == testDoctorId),
+                It.Is<DateTime>(i => i == testDateTime))).ReturnsAsync(paginatedItemsSuccess);
+
+            _mapper.Setup(s => s.Map<IntervalDto>(
+                It.Is<Interval>(i => i.Equals(intervalSuccess)))).Returns(intervalDtoSuccess);
+
+            // act
+            var result = await _intervalService.GetFreeIntervalsByDoctorDate(testDoctorId, testDateTime);
+
+            // assert
+            result.Should().NotBeNull();
+            result?.Data.Should().NotBeNull();
+            result?.PagesCount.Should().Be(testPagesCount);
+            result?.PageIndex.Should().Be(testPageIndex);
+            result?.PageSize.Should().Be(testPageSize);
+            result?.TotalCount.Should().Be(testTotalCount);
+        }
+
+        [Fact]
+        public async Task GetFreeIntervalsByDoctorDate_Failed()
+        {
+            // arrange
+            Task<PaginatedItems<Interval>>? testResult = null;
+            var testDoctorId = int.MaxValue;
+            var testDateTime = DateTime.MaxValue;
+
+            _intervalRepository.Setup(s => s.GetFreeIntervalsByDoctorDate(
+                It.Is<int>(i => i == testDoctorId),
+                It.Is<DateTime>(i => i == testDateTime))).Returns(testResult!);
+
+            // act
+            var result = await _intervalService.GetFreeIntervalsByDoctorDate(testDoctorId, testDateTime);
+
+            // assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
         public async Task AddInterval_Success()
         {
             // arrange

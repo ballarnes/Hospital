@@ -60,6 +60,21 @@ namespace Hospital.Host.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(PaginatedItemsResponse<OfficeDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetFreeOfficesByIntervalDate(GetFreeOfficesRequest request)
+        {
+            var result = await _officeService.GetFreeOfficesByIntervalDate(request.IntervalId, request.Date);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
         [ProducesResponseType(typeof(PaginatedItemsResponse<IntervalDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetIntervals(PaginatedItemsRequest request)
@@ -80,6 +95,21 @@ namespace Hospital.Host.Controllers
         public async Task<IActionResult> GetIntervalById(GetByIdRequest request)
         {
             var result = await _intervalService.GetIntervalById(request.Id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(PaginatedItemsResponse<IntervalDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetFreeIntervalsByDoctorDate(GetFreeIntervalsRequest request)
+        {
+            var result = await _intervalService.GetFreeIntervalsByDoctorDate(request.DoctorId, request.Date);
 
             if (result == null)
             {
@@ -140,6 +170,21 @@ namespace Hospital.Host.Controllers
         public async Task<IActionResult> GetDoctorById(GetByIdRequest request)
         {
             var result = await _doctorService.GetDoctorById(request.Id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(PaginatedItemsResponse<DoctorDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetDoctorsBySpecializationId(GetByIdRequest request)
+        {
+            var result = await _doctorService.GetDoctorsBySpecializationId(request.Id);
 
             if (result == null)
             {

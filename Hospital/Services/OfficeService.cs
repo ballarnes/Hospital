@@ -60,6 +60,28 @@ namespace Hospital.Host.Services
             });
         }
 
+        public async Task<PaginatedItemsResponse<OfficeDto>?> GetFreeOfficesByIntervalDate(int intervalId, DateTime date)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _officeRepository.GetFreeOfficesByIntervalDate(intervalId, date);
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new PaginatedItemsResponse<OfficeDto>()
+                {
+                    PageIndex = 0,
+                    PageSize = result.TotalCount,
+                    PagesCount = result.PagesCount,
+                    TotalCount = result.TotalCount,
+                    Data = result.Data.Select(s => _mapper.Map<OfficeDto>(s)).ToList()
+                };
+            });
+        }
+
         public async Task<IdResponse<int>?> AddOffice(int number)
         {
             return await ExecuteSafe(async () =>

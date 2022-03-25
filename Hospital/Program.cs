@@ -38,6 +38,17 @@ builder.Services.AddTransient<IAppointmentService, AppointmentService>();
 
 builder.Services.AddScoped<IDbConnectionWrapper, DbConnectionWrapper>(provider => new DbConnectionWrapper(configuration["ConnectionString"]));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "CorsPolicy",
+        builder => builder
+            .SetIsOriginAllowed((host) => true)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,6 +59,7 @@ if (app.Environment.IsDevelopment())
     app.UseRouting();
 }
 
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>

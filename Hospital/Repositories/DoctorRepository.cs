@@ -74,6 +74,32 @@ namespace Hospital.Host.Repositories
             };
         }
 
+        public async Task<PaginatedItems<Doctor>> GetDoctorsBySpecializationId(int id)
+        {
+            var totalCount = await _connection.Connection
+                    .QueryAsync<int>($"SELECT COUNT(*) FROM Doctors d WHERE d.SpecializationId = {id}");
+
+            var result = await _connection.Connection
+                .QueryAsync<Doctor, Specialization, Doctor>($"SELECT d.*, s.* FROM Doctors d INNER JOIN Specializations s ON d.SpecializationId = s.Id WHERE d.SpecializationId = {id}", (d, s) =>
+                {
+                    var doctorDto = d;
+
+                    if (doctorDto.Specialization == null)
+                    {
+                        doctorDto.Specialization = s;
+                    }
+
+                    return doctorDto;
+                });
+
+            return new PaginatedItems<Doctor>()
+            {
+                PagesCount = 1,
+                TotalCount = totalCount.FirstOrDefault(),
+                Data = result
+            };
+        }
+
         public async Task<int?> AddDoctor(string name, string surname, int specializationId)
         {
             var command = new SqlCommand("AddOrUpdateDoctors");
