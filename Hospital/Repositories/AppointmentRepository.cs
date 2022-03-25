@@ -76,7 +76,7 @@ namespace Hospital.Host.Repositories
                 INNER JOIN Specializations s ON d.SpecializationId = s.Id
                 INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
-                WHERE d.Id = {id}", (a, d, s, i, o) =>
+                WHERE a.Id = {id}", (a, d, s, i, o) =>
                 {
                     var appointment = a;
 

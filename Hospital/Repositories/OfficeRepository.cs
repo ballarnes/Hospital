@@ -51,6 +51,53 @@ namespace Hospital.Host.Repositories
             };
         }
 
+        public async Task<PaginatedItems<Office>> GetFreeOfficesByIntervalDate(int intervalId, DateTime date)
+        {
+            var allOffices = await _connection.Connection
+                .QueryAsync<Office>(@$"
+                SELECT * FROM Offices
+                ORDER BY Id");
+
+            var appointmentsByIntervalDate = await _connection.Connection
+                .QueryAsync<Appointment, Interval, Office, Appointment>($@"
+                SELECT * FROM Appointments a
+                INNER JOIN Intervals i ON a.IntervalId = i.Id
+                INNER JOIN Offices o ON a.OfficeId = o.Id
+                WHERE (a.IntervalId = {intervalId} AND a.Date LIKE '{date.ToString("yyyy-MM-dd")}')", (a, i, o) =>
+                {
+                    var appointment = a;
+
+                    if (appointment.Interval == null)
+                    {
+                        appointment.Interval = i;
+                    }
+
+                    if (appointment.Office == null)
+                    {
+                        appointment.Office = o;
+                    }
+
+                    return appointment;
+                });
+
+            var freeOffices = new List<Office>(allOffices);
+
+            foreach (var appointment in appointmentsByIntervalDate)
+            {
+                if (freeOffices.Any(o => o.Id.Equals(appointment.Office.Id)))
+                {
+                    freeOffices.Remove(freeOffices.First(o => o.Id.Equals(appointment.Office.Id)));
+                }
+            }
+
+            return new PaginatedItems<Office>()
+            {
+                PagesCount = 1,
+                TotalCount = freeOffices.Count,
+                Data = freeOffices
+            };
+        }
+
         public async Task<int?> AddOffice(int number)
         {
             var command = new SqlCommand("AddOrUpdateOffices");

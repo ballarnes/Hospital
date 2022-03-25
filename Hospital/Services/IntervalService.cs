@@ -54,6 +54,28 @@ namespace Hospital.Host.Services
             });
         }
 
+        public async Task<PaginatedItemsResponse<IntervalDto>?> GetFreeIntervalsByDoctorDate(int doctorId, DateTime date)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _intervalRepository.GetFreeIntervalsByDoctorDate(doctorId, date);
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new PaginatedItemsResponse<IntervalDto>()
+                {
+                    PageIndex = 0,
+                    PageSize = result.TotalCount,
+                    PagesCount = result.PagesCount,
+                    TotalCount = result.TotalCount,
+                    Data = result.Data.Select(s => _mapper.Map<IntervalDto>(s)).ToList()
+                };
+            });
+        }
+
         public async Task<IdResponse<int>?> AddInterval(TimeSpan start, TimeSpan end)
         {
             return await ExecuteSafe(async () =>

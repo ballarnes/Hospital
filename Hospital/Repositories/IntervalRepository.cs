@@ -52,6 +52,47 @@ namespace Hospital.Host.Repositories
             };
         }
 
+        public async Task<PaginatedItems<Interval>> GetFreeIntervalsByDoctorDate(int doctorId, DateTime date)
+        {
+            var allIntervals = await _connection.Connection
+                .QueryAsync<Interval>(@$"
+                SELECT * FROM Intervals
+                ORDER BY Id");
+
+            var appointmentsByDate = await _connection.Connection
+                .QueryAsync<Appointment, Interval, Appointment>($@"
+                SELECT * FROM Appointments a
+                INNER JOIN Intervals i ON a.IntervalId = i.Id
+                WHERE (a.DoctorId = {doctorId} AND a.Date LIKE '{date.ToString("yyyy-MM-dd")}')", (a, i) =>
+                {
+                    var appointment = a;
+
+                    if (appointment.Interval == null)
+                    {
+                        appointment.Interval = i;
+                    }
+
+                    return appointment;
+                });
+
+            var freeIntervals = new List<Interval>(allIntervals);
+
+            foreach (var appointment in appointmentsByDate)
+            {
+                if (freeIntervals.Any(i => i.Id.Equals(appointment.Interval.Id)))
+                {
+                    freeIntervals.Remove(freeIntervals.First(i => i.Id.Equals(appointment.Interval.Id)));
+                }
+            }
+
+            return new PaginatedItems<Interval>()
+            {
+                PagesCount = 1,
+                TotalCount = freeIntervals.Count(),
+                Data = freeIntervals
+            };
+        }
+
         public async Task<int?> AddInterval(TimeSpan start, TimeSpan end)
         {
             var command = new SqlCommand("AddOrUpdateIntervals");

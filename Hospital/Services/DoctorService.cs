@@ -54,6 +54,28 @@ namespace Hospital.Host.Services
             });
         }
 
+        public async Task<PaginatedItemsResponse<DoctorDto>?> GetDoctorsBySpecializationId(int id)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _doctorRepository.GetDoctorsBySpecializationId(id);
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new PaginatedItemsResponse<DoctorDto>()
+                {
+                    PageIndex = 0,
+                    PageSize = result.TotalCount,
+                    PagesCount = result.PagesCount,
+                    TotalCount = result.TotalCount,
+                    Data = result.Data.Select(s => _mapper.Map<DoctorDto>(s)).ToList()
+                };
+            });
+        }
+
         public async Task<IdResponse<int>?> AddDoctor(string name, string surname, int specializationId)
         {
             return await ExecuteSafe(async () =>

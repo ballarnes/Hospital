@@ -159,6 +159,77 @@
         }
 
         [Fact]
+        public async Task GetDoctorsBySpecializationId_Success()
+        {
+            // arrange
+            var testPageIndex = 0;
+            var testPageSize = 2;
+            var testPagesCount = 1;
+            var testTotalCount = 2;
+            var testSpecializationId = _testDoctor.SpecializationId;
+
+            var paginatedItemsSuccess = new PaginatedItems<Doctor>()
+            {
+                Data = new List<Doctor>()
+                {
+                    _testDoctor
+                },
+                TotalCount = testTotalCount,
+                PagesCount = testPagesCount
+            };
+
+            var doctorSuccess = new Doctor()
+            {
+                Id = _testDoctor.Id,
+                Name = _testDoctor.Name,
+                Surname = _testDoctor.Surname,
+                SpecializationId = _testDoctor.SpecializationId
+            };
+
+            var doctorDtoSuccess = new DoctorDto()
+            {
+                Id = _testDoctor.Id,
+                Name = _testDoctor.Name,
+                Surname = _testDoctor.Surname,
+                SpecializationId = _testDoctor.SpecializationId
+            };
+
+            _doctorRepository.Setup(s => s.GetDoctorsBySpecializationId(
+                It.Is<int>(i => i == testSpecializationId))).ReturnsAsync(paginatedItemsSuccess);
+
+            _mapper.Setup(s => s.Map<DoctorDto>(
+                It.Is<Doctor>(i => i.Equals(doctorSuccess)))).Returns(doctorDtoSuccess);
+
+            // act
+            var result = await _doctorService.GetDoctorsBySpecializationId(testSpecializationId);
+
+            // assert
+            result.Should().NotBeNull();
+            result?.Data.Should().NotBeNull();
+            result?.PagesCount.Should().Be(testPagesCount);
+            result?.PageIndex.Should().Be(testPageIndex);
+            result?.PageSize.Should().Be(testPageSize);
+            result?.TotalCount.Should().Be(testTotalCount);
+        }
+
+        [Fact]
+        public async Task GetDoctorsBySpecializationId_Failed()
+        {
+            // arrange
+            Task<PaginatedItems<Doctor>>? testResult = null;
+            var testSpecializationId = int.MaxValue;
+
+            _doctorRepository.Setup(s => s.GetDoctorsBySpecializationId(
+                It.Is<int>(i => i == testSpecializationId))).Returns(testResult!);
+
+            // act
+            var result = await _doctorService.GetDoctorsBySpecializationId(testSpecializationId);
+
+            // assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
         public async Task AddDoctor_Success()
         {
             // arrange

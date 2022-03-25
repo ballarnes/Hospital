@@ -147,6 +147,78 @@
         }
 
         [Fact]
+        public async Task GetFreeOfficesByIntervalDate_Success()
+        {
+            // arrange
+            var testPageIndex = 0;
+            var testPageSize = 1;
+            var testPagesCount = 1;
+            var testTotalCount = 1;
+            var testIntervalId = 1;
+            var testDateTime = DateTime.UtcNow;
+
+            var paginatedItemsSuccess = new PaginatedItems<Office>()
+            {
+                Data = new List<Office>()
+                {
+                    new Office()
+                    {
+                        Number = _testOffice.Number,
+                    },
+                },
+                TotalCount = testTotalCount,
+                PagesCount = testPagesCount
+            };
+
+            var officeSuccess = new Office()
+            {
+                Number = _testOffice.Number
+            };
+
+            var officeDtoSuccess = new OfficeDto()
+            {
+                Number = _testOffice.Number
+            };
+
+            _officeRepository.Setup(s => s.GetFreeOfficesByIntervalDate(
+                It.Is<int>(i => i == testIntervalId),
+                It.Is<DateTime>(i => i == testDateTime))).ReturnsAsync(paginatedItemsSuccess);
+
+            _mapper.Setup(s => s.Map<OfficeDto>(
+                It.Is<Office>(i => i.Equals(officeSuccess)))).Returns(officeDtoSuccess);
+
+            // act
+            var result = await _officeService.GetFreeOfficesByIntervalDate(testIntervalId, testDateTime);
+
+            // assert
+            result.Should().NotBeNull();
+            result?.Data.Should().NotBeNull();
+            result?.PagesCount.Should().Be(testPagesCount);
+            result?.PageIndex.Should().Be(testPageIndex);
+            result?.PageSize.Should().Be(testPageSize);
+            result?.TotalCount.Should().Be(testTotalCount);
+        }
+
+        [Fact]
+        public async Task GetFreeOfficesByIntervalDate_Failed()
+        {
+            // arrange
+            Task<PaginatedItems<Office>>? testResult = null;
+            var testIntervalId = int.MaxValue;
+            var testDateTime = DateTime.MaxValue;
+
+            _officeRepository.Setup(s => s.GetFreeOfficesByIntervalDate(
+                It.Is<int>(i => i == testIntervalId),
+                It.Is<DateTime>(i => i == testDateTime))).Returns(testResult!);
+
+            // act
+            var result = await _officeService.GetFreeOfficesByIntervalDate(testIntervalId, testDateTime);
+
+            // assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
         public async Task AddOffice_Success()
         {
             // arrange
