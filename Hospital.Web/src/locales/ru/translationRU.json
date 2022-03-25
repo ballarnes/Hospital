@@ -1,0 +1,40 @@
+{
+    "error": {
+      "patientNameError": "Имя должно быть введено!",
+      "sorry": "Извините",
+      "noIntervals": "у доктора нет свободного времени в этот день!",
+      "noOffices": "свободных кабинетов нету!",
+      "appointmentNotCreated": "произошла ошибка при создании записи!",
+      "notFoundAppointment": "запись не найдена!",
+      "tryToChangeTheInterval": "Попробуйте изменить время.",
+      "tryToChangeTheDoctorOrDate": "Попробуйте выбрать другого врача или изменить дату.",
+      "tryLater": "Повторите попытку позже."
+    },
+    "success": {
+      "success": "Успех",
+      "useThisId": "Используйте этот ID чтобы получить информацию о записи"
+    },
+    "tabs": {
+        "information": "Получить информацию",
+        "appointment": "Записаться"
+    },
+    "homePage": "Главная",
+    "specializations": "Специализации",
+    "specializationsPageTitle": "Специализации врачей",
+    "selectSpecialization": "Выберите специализацию врача",
+    "selectDoctor": "Выберите врача",
+    "selectDateAndEnterName": "Выберите дату и введите имя",
+    "patientName": "Введите ваше имя",
+    "selectInterval": "Выберите время для записи",
+    "appointmentCreated": "Вы записаны!",
+    "changeLang": "Язык",
+    "appointment": {
+      "enterId": "Введите ID записи",
+      "doctorName": "Имя врача",
+      "specialization": "Специализация",
+      "time": "Время",
+      "date": "Дата",
+      "office": "Кабинет",
+      "patientName": "Имя пациента"
+    }
+}

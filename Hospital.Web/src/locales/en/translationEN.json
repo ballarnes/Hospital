@@ -1,0 +1,40 @@
+{
+    "error": {
+      "patientNameError": "Name must be entered!",
+      "sorry": "Sorry",
+      "noIntervals": "the doctor has no free time on this day!",
+      "noOffices": "there are no free offices!",
+      "notFoundAppointment": "appointment was not found!",
+      "appointmentNotCreated": "an error occured creating the appointment!",
+      "tryToChangeTheInterval": "Try to change the time.",
+      "tryToChangeTheDoctorOrDate": "Try to change the doctor or select another date.",
+      "tryLater": "Try again later."
+    },
+    "success": {
+      "success": "Success",
+      "useThisId": "Use this ID to get information about your appointment"
+    },
+    "tabs": {
+        "information": "Get information",
+        "appointment": "Make an appointment"
+    },
+    "homePage": "Home",
+    "specializations": "Specializations",
+    "specializationsPageTitle": "Doctors specializations",
+    "selectSpecialization": "Select doctor's specialization",
+    "selectDoctor": "Select doctor",
+    "selectDateAndEnterName": "Select date and enter name",
+    "patientName": "Enter your name",
+    "selectInterval": "Choose a time to make an appointment",
+    "appointmentCreated": "Appointment created!",
+    "changeLang": "Language",
+    "appointment": {
+      "enterId": "Enter ID of the appointment",
+      "doctorName": "Doctor's name",
+      "specialization": "Specialization",
+      "time": "Time",
+      "date": "Date",
+      "office": "Office",
+      "patientName": "Patient name"
+    }
+}
