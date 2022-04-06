@@ -8,18 +8,26 @@ import { AppointmentStore } from '../../stores/components'
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { useAuth } from 'react-oidc-context'
 
 const Appointment = observer(() => {
   const store = useInjection<AppointmentStore>(ownTypes.appointmentStore);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const auth = useAuth();
+  const authorization = auth.user?.access_token ?? '';
 
   useEffect(() => {
     const getSpec = async () => {
-      await store.init();
+      await store.init(authorization);
     }
 
     getSpec()
-  }, [store])
+  }, [store, authorization])
+
+  const isWeekday = (date: Date) => {
+    const day = date.getDay();
+    return day !== 0 && day !== 6;
+  };
 
   return (
     <Container>
@@ -57,12 +65,21 @@ const Appointment = observer(() => {
               {(store.specializationSelected && store.doctorSelected && !store.dateSelected) && (
                 <>
                 <h3 className='mb-4 text-center'>{t('selectDateAndEnterName')}</h3>
-                <DatePicker
-                  selected={store.date}
-                  onChange={(date: Date) => store.changeDate(date)}
-                  minDate={new Date()}
-                  className="mb-3 text-center"
-                />
+                <Row className="justify-content-center text-center">
+                  <Col>
+                  <DatePicker
+                    locale={store.getLocale(i18n.language)}
+                    dateFormat={store.getDateFormat(i18n.language)}
+                    selected={store.date}
+                    onChange={(date: Date) => store.changeDate(date)}
+                    minDate={new Date()}
+                    maxDate={store.addDays(new Date(), 14)}
+                    filterDate={isWeekday}
+                    className="mb-3 text-center"
+                    withPortal
+                  />
+                  </Col>
+                </Row>
                 <FloatingLabel
                 controlId="floatingInput"
                 label={t("patientName")}
@@ -70,11 +87,12 @@ const Appointment = observer(() => {
                 >
                   <Form.Control
                   type="text"
+                  disabled={true}
                   placeholder={t("patientName")}
-                  value={store.patientName}
+                  value={auth.user?.profile.name}
                   onChange={(ev)=> {store.changeName(ev.target.value)}} />
                 </FloatingLabel>
-                <Button variant="outline-success" onClick={store.selectDateAndName}>OK</Button>
+                <Button variant="outline-success" onClick={() => { store.changeName(auth.user?.profile.name ?? ''); }}>OK</Button>
                 {!!store.nameError && (
                   <p style={{ color: 'red', fontSize: 14 }}>{t("error.patientNameError")}</p>
                 )}

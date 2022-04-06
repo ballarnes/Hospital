@@ -19,7 +19,7 @@ export default class DefaultOfficeService implements OfficeService {
     public async getFreeOffices(intervalId: number, date: Date): Promise<OfficesDto> {
         const headers = { contentType: ContentType.Json};
         const data = { intervalId, date };
-        const result = await this.httpService.send<OfficesDto>(`HospitalBff/GetFreeOfficesByIntervalDate/`, MethodType.POST, headers, data);
+        const result = await this.httpService.send<OfficesDto>(`${process.env.BASE_API_URL}HospitalBff/GetFreeOfficesByIntervalDate/`, MethodType.POST, headers, data);
         return result.data;
     }
 }

@@ -19,7 +19,7 @@ export default class DefaultIntervalService implements IntervalService {
     public async getFreeIntervals(doctorId: number, date: Date): Promise<IntervalsDto> {
         const headers = { contentType: ContentType.Json};
         const data = { doctorId, date };
-        const result = await this.httpService.send<IntervalsDto>(`HospitalBff/GetFreeIntervalsByDoctorDate/`, MethodType.POST, headers, data);
+        const result = await this.httpService.send<IntervalsDto>(`${process.env.BASE_API_URL}HospitalBff/GetFreeIntervalsByDoctorDate/`, MethodType.POST, headers, data);
         return result.data;
     }
 }

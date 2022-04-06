@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Alert, Badge, Button, Col, Container, FloatingLabel, Form, ListGroup, Row, Spinner } from 'react-bootstrap'
+import { Alert, Badge, Button, CloseButton, Col, Container, FloatingLabel, Form, ListGroup, Row, Spinner } from 'react-bootstrap'
 import ownTypes from '../../ioc/ownTypes'
 import { observer } from 'mobx-react'
 import { useInjection } from '../../ioc/ioc.react'
@@ -46,6 +46,12 @@ const Information = observer(() => {
               <Button variant="outline-success" onClick={store.getAppointment}>OK</Button>
                 </>
               ) : (
+                <>
+                <Row>
+                  <Col style={{ textAlign: "right" }}>
+                    <CloseButton onClick={store.changeAppointment}/>
+                  </Col>
+                </Row>
                 <ListGroup variant="flush">
                   <ListGroup.Item><h4>{t('appointment.doctorName')}: <Badge bg="info" pill>{store.appointment.doctor.name} {store.appointment.doctor.surname}</Badge></h4></ListGroup.Item>
                   <ListGroup.Item><h4>{t('appointment.specialization')}: <Badge bg="info" pill>{store.appointment.doctor.specialization.name}</Badge></h4></ListGroup.Item>
@@ -54,6 +60,7 @@ const Information = observer(() => {
                   <ListGroup.Item><h4>{t('appointment.office')}: <Badge bg="info" pill>{store.appointment.office.number}</Badge></h4></ListGroup.Item>
                   <ListGroup.Item><h4>{t('appointment.patientName')}: <Badge bg="info" pill>{store.appointment.patientName}</Badge></h4></ListGroup.Item>
                 </ListGroup>
+                </>
               )}
               {store.error && (
                 <Alert variant="danger">

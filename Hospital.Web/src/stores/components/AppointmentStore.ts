@@ -10,6 +10,8 @@ import DoctorService from "../../services/DoctorService";
 import IntervalService from "../../services/IntervalService";
 import OfficeService from "../../services/OfficeService";
 import SpecializationService from "../../services/SpecializationService";
+import ru from 'date-fns/locale/ru';
+import en from 'date-fns/locale/en-GB';
 
 @injectable()
 export default class AppointmentStore {
@@ -18,6 +20,7 @@ export default class AppointmentStore {
     doctors: Doctor[] = [];
     intervals: Interval[] = [];
     offices: Office[] = [];
+    authorization = '';
     isLoading = false;
     pageIndex = 0;
     pageSize = 10;
@@ -48,9 +51,10 @@ export default class AppointmentStore {
    }
 
     
-    public init = async () => {
+    public init = async (authorization: string) => {
         try {
             this.isLoading = true;
+            this.authorization = authorization;
             const result = await this.specializationService.getByPage(this.pageIndex, this.pageSize);
             this.specializations = result.data;
             this.specialization = result.data[0].id;
@@ -98,28 +102,35 @@ export default class AppointmentStore {
         this.date = date;
     }
 
-    public selectDateAndName = async () => {
-        if (await this.checkValidation()) {
-            this.patientNameSelected = false;
-            this.dateSelected = false;
+    public getLocale = (language: string) => {
+        if (language == "ru") {
+            return ru;
         }
         else {
-            this.patientNameSelected = true;
-            this.dateSelected = true;
-            this.getFreeIntervals();
+            return en;
         }
+    }
+
+    public getDateFormat = (language: string) => {
+        if (language == "ru") {
+            return "dd/MM/yyyy";
+        }
+        else {
+            return "MM/dd/yyyy";
+        }
+    }
+
+    public addDays = (date: Date, days: number) => {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
     }
 
     public changeName = async (name: string) => {
         this.patientName = name;
-    }
-
-    private checkValidation = async () => {
-        this.nameError = false;
-        if (this.patientName.length === 0) {
-            this.nameError = true;
-        }
-        return this.nameError;
+        this.patientNameSelected = true;
+        this.dateSelected = true;
+        this.getFreeIntervals();
     }
 
     public getFreeIntervals = async () => {
@@ -167,7 +178,7 @@ export default class AppointmentStore {
     private makeAppointment = async () => {
         try {
             this.isLoading = true;
-            const result = await this.appointmentService.makeAppointment(this.doctor, this.interval, this.office, this.date, this.patientName);
+            const result = await this.appointmentService.makeAppointment(this.doctor, this.interval, this.office, this.date, this.patientName, this.authorization);
             this.id = result.id;
             if (this.id > 0) {
                 this.appointmentCreated = true;

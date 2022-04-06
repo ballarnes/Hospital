@@ -19,7 +19,7 @@ export default class DefaultDoctorService implements DoctorService {
     public async getBySpecId(id: number): Promise<DoctorsDto> {
         const headers = { contentType: ContentType.Json};
         const data = { id };
-        const result = await this.httpService.send<DoctorsDto>(`HospitalBff/GetDoctorsBySpecializationId/`, MethodType.POST, headers, data);
+        const result = await this.httpService.send<DoctorsDto>(`${process.env.BASE_API_URL}HospitalBff/GetDoctorsBySpecializationId/`, MethodType.POST, headers, data);
         return result.data;
     }
 }

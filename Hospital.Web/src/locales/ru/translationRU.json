@@ -1,4 +1,15 @@
 {
+    "personalArea": {
+      "personalArea": "Личный кабинет",
+      "name": "Имя",
+      "surname": "Фамилия",
+      "email": "Емейл",
+      "verified": "Подтвержден",
+      "loggedInWith": "Вход выполнен с помощью"
+    },
+    "signedIn": "Авторизован как",
+    "login": "Войти",
+    "logout": "Выйти",
     "error": {
       "patientNameError": "Имя должно быть введено!",
       "sorry": "Извините",
@@ -27,7 +38,6 @@
     "patientName": "Введите ваше имя",
     "selectInterval": "Выберите время для записи",
     "appointmentCreated": "Вы записаны!",
-    "changeLang": "Язык",
     "appointment": {
       "enterId": "Введите ID записи",
       "doctorName": "Имя врача",

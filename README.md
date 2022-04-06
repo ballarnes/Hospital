@@ -8,7 +8,8 @@
 1. Open **"SolutionItems"** folder.
 2. Run all files one by one.
 3. Open **"Hospital.sln"**.
-4. Start debug mode.
+4. Select **"Hospital.Host"** and **"IdentityServer"** in Startup project properties.
+5. Start debug mode.
 
 
 ## How to run UI
@@ -24,5 +25,6 @@
 
 > Help
 >
-> Website link: http://localhost:5001/
+> Website link: http://localhost:5001
 > Swagger link: http://localhost:5000/swagger/index.html
+> Identity Server link: http://localhost:5002
