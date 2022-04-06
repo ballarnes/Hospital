@@ -27,6 +27,10 @@ export default class InformationStore {
         this.id = parseInt(id);
     }
 
+    public changeAppointment = async () => {
+        this.appointment = null;
+    }
+
     public getAppointment = async () => {
         try {
             this.error = false;

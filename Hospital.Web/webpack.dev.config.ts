@@ -31,7 +31,7 @@ const config: Configuration = {
       {
         test: /\.(scss|css)$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
-      },
+      }
     ],
   },
   resolve: {

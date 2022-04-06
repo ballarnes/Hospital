@@ -5,7 +5,7 @@ import { useInjection } from '../../ioc/ioc.react'
 import ownTypes from '../../ioc/ownTypes'
 import HomePageStore, { TabsType } from '../../stores/pages/HomePageStore'
 import { useTranslation } from 'react-i18next';
-
+import { useAuth } from 'react-oidc-context'
 
 const Appointment = React.lazy(() => import('../../components/Appointment'))
 const Information = React.lazy(() => import('../../components/Information'))
@@ -13,6 +13,7 @@ const Information = React.lazy(() => import('../../components/Information'))
 const HomePage = observer(() => {
   const store = useInjection<HomePageStore>(ownTypes.homePageStore);
   const { t } = useTranslation();
+  const auth = useAuth();
   
   return (
       <Container className="pt-4 pb-4">
@@ -25,7 +26,7 @@ const HomePage = observer(() => {
           <Tab eventKey={TabsType[TabsType.Information]} title={t('tabs.information')}>
             {store.currentTab === `${TabsType[TabsType.Information]}` && <Information />}
           </Tab>
-          <Tab eventKey={TabsType[TabsType.Appointment]} title={t('tabs.appointment')}>
+          <Tab disabled={!auth.isAuthenticated} eventKey={TabsType[TabsType.Appointment]} title={t('tabs.appointment')}>
             {store.currentTab === `${TabsType[TabsType.Appointment]}` && <Appointment />}
           </Tab>
         </Tabs>

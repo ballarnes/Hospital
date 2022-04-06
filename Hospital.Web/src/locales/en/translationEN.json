@@ -1,4 +1,15 @@
 {
+    "personalArea": {
+      "personalArea": "Personal Area",
+      "name": "Name",
+      "surname": "Surname",
+      "email": "Email",
+      "verified": "Verified",
+      "loggedInWith": "Logged in with"
+    },
+    "signedIn": "Signed in as",
+    "login": "Login",
+    "logout": "Logout",
     "error": {
       "patientNameError": "Name must be entered!",
       "sorry": "Sorry",
@@ -15,8 +26,8 @@
       "useThisId": "Use this ID to get information about your appointment"
     },
     "tabs": {
-        "information": "Get information",
-        "appointment": "Make an appointment"
+      "information": "Get information",
+      "appointment": "Make an appointment"
     },
     "homePage": "Home",
     "specializations": "Specializations",
@@ -27,7 +38,6 @@
     "patientName": "Enter your name",
     "selectInterval": "Choose a time to make an appointment",
     "appointmentCreated": "Appointment created!",
-    "changeLang": "Language",
     "appointment": {
       "enterId": "Enter ID of the appointment",
       "doctorName": "Doctor's name",

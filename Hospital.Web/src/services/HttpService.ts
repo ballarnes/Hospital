@@ -6,8 +6,6 @@ export interface HttpService {
     send<T>(url: string, methodType: MethodType, headers?: ApiHeader, data?: any) : Promise<ApiResponse<T>>;
 }
 
-const baseUrl = process.env.BASE_API_URL
-
 export enum ContentType {
     FormData,
     Json
@@ -52,7 +50,7 @@ export default class DefaultHttpService implements HttpService {
             headers: headersRequest,
             body: bodyRequest
         }
-        const response = await fetch(`${baseUrl}${url}`, requestOptions);
+        const response = await fetch(`${url}`, requestOptions);
         return this.handleResponse(response);
     }
 

@@ -19,7 +19,7 @@ export default class DefaultSpecializationService implements SpecializationServi
     public async getByPage(pageIndex: number, pageSize: number): Promise<SpecializationsDto> {
         const headers = { contentType: ContentType.Json};
         const data = { pageIndex, pageSize };
-        const result = await this.httpService.send<SpecializationsDto>(`HospitalBff/GetSpecializations/`, MethodType.POST, headers, data);
+        const result = await this.httpService.send<SpecializationsDto>(`${process.env.BASE_API_URL}HospitalBff/GetSpecializations/`, MethodType.POST, headers, data);
         return result.data;
     }
 }
