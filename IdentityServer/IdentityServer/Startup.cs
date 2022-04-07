@@ -65,7 +65,6 @@ namespace IdentityServer
 
             app.UseIdentityServer();
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
 

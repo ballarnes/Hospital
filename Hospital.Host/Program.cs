@@ -15,6 +15,8 @@ var configuration = GetConfiguration();
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddLog4Net("../../../../SolutionItems/log4net.config");
+
 builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen(options =>
