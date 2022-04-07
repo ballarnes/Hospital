@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SolutionItems\7_DeleteOffices.sql = SolutionItems\7_DeleteOffices.sql
 		SolutionItems\8_DeleteIntervals.sql = SolutionItems\8_DeleteIntervals.sql
 		SolutionItems\9_DeleteSpecializations.sql = SolutionItems\9_DeleteSpecializations.sql
+		SolutionItems\log4net.config = SolutionItems\log4net.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityServer", "{0A2B7CCB-16C6-46EC-978D-F8063D9A7224}"
