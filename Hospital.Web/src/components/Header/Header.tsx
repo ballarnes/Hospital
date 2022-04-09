@@ -4,6 +4,7 @@ import { Navbar, Nav, Container, Image, Button, Offcanvas, ButtonGroup, Col, Row
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useNavigate } from "react-router-dom";
+import Clock from 'react-live-clock';
 
 const Header = observer(() => {
   const navigate = useNavigate();
@@ -23,11 +24,15 @@ const Header = observer(() => {
            <Button variant="dark" className='mx-2' onClick={() => navigate('/specializations')}>{t('specializations')}</Button>
       </Navbar.Brand>
 
-      {auth.isAuthenticated && (
-          <Navbar.Text style={{ marginLeft: "50%" }}>
-            {t('signedIn')}: <a>{auth.user?.profile.given_name}</a>
-          </Navbar.Text>
-      )} 
+      <Navbar.Text style={{ marginLeft: "50%" }}>
+        <Clock format={'HH:mm:ss'} ticking={true} />
+      </Navbar.Text>
+      
+      <Navbar.Text>
+        {auth.isAuthenticated && (
+          <>{t('signedIn')}: <a>{auth.user?.profile.given_name}</a></>
+        )} 
+      </Navbar.Text>
 
       <Navbar.Toggle aria-controls="offcanvasNavbar" />
       <Navbar.Offcanvas
