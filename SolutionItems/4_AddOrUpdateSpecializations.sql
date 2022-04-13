@@ -22,3 +22,29 @@ ELSE
 		[Description] = @description
 		WHERE Id = @id
 	END
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Specializations_INSERT')
+DROP TRIGGER Specializations_INSERT;
+
+GO
+
+CREATE TRIGGER Specializations_INSERT ON Specializations
+AFTER INSERT AS
+INSERT INTO SpecializationsChangeLog (SpecializationId, [Name], [Description], Operation)
+SELECT Id, [Name], [Description], 'INSERT'
+FROM INSERTED
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Specializations_UPDATE')
+DROP TRIGGER Specializations_UPDATE;
+
+GO
+
+CREATE TRIGGER Specializations_UPDATE ON Specializations
+AFTER UPDATE AS
+INSERT INTO SpecializationsChangeLog (SpecializationId, [Name], [Description], Operation)
+SELECT Id, [Name], [Description], 'UPDATE'
+FROM INSERTED

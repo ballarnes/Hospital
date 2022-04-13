@@ -22,3 +22,29 @@ ELSE
 		[End] = @end
 		WHERE Id = @id
 	END
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Intervals_INSERT')
+DROP TRIGGER Intervals_INSERT;
+
+GO
+
+CREATE TRIGGER Intervals_INSERT ON Intervals
+AFTER INSERT AS
+INSERT INTO IntervalsChangeLog (IntervalId, [Start], [End], Operation)
+SELECT Id, [Start], [End], 'INSERT'
+FROM INSERTED
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Intervals_UPDATE')
+DROP TRIGGER Intervals_UPDATE;
+
+GO
+
+CREATE TRIGGER Intervals_UPDATE ON Intervals
+AFTER UPDATE AS
+INSERT INTO IntervalsChangeLog (IntervalId, [Start], [End], Operation)
+SELECT Id, [Start], [End], 'UPDATE'
+FROM INSERTED
