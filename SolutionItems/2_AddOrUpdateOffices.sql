@@ -12,7 +12,7 @@ IF @id = 0
 		INSERT INTO Offices(Number) 
 		VALUES(@number)
 
-		SET @id = @@IDENTITY
+		SET @id = scope_identity()
 		RETURN @id
 	END
 ELSE

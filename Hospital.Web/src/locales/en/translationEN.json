@@ -5,7 +5,22 @@
       "surname": "Surname",
       "email": "Email",
       "verified": "Verified",
-      "loggedInWith": "Logged in with"
+      "loggedInWith": "Logged in with",
+      "upcomingAppointments": "Upcoming appointments",
+      "infoPopover": {
+        "header": "Information",
+        "body": "The table shows your registered appointments that have not started yet. Keep in mind that you can edit or delete the appointment up to 3 hours before the meeting itself."
+      },
+      "updateModal": {
+        "header": "Edit appointment",
+        "date": "Select date",
+        "interval": "Select interval",
+        "save": "Save changes",
+        "close": "Close",
+        "delete": "Delete",
+        "subDelete": "Do you really want to delete an appointment?",
+        "iwanttodelete": "Yes, I want to delete"
+      }
     },
     "signedIn": "Signed in as",
     "login": "Login",
@@ -41,10 +56,13 @@
     "appointment": {
       "enterId": "Enter ID of the appointment",
       "doctorName": "Doctor's name",
+      "doctorSurname": "Doctor's surname",
       "specialization": "Specialization",
       "time": "Time",
       "date": "Date",
       "office": "Office",
       "patientName": "Patient name"
-    }
+    },
+    "saved": "Saved",
+    "deleted": "Deleted"
 }

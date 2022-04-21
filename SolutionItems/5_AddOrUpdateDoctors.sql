@@ -12,7 +12,7 @@ IF @id = 0
 		INSERT INTO Doctors([Name], [Surname], [SpecializationId])
 		VALUES(@name, @surname, @specializationId)
 
-		SET @id = @@IDENTITY
+		SET @id = scope_identity()
 		RETURN @id
 	END
 ELSE

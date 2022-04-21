@@ -53,12 +53,12 @@ const Information = observer(() => {
                   </Col>
                 </Row>
                 <ListGroup variant="flush">
-                  <ListGroup.Item><h4>{t('appointment.doctorName')}: <Badge bg="info" pill>{store.appointment.doctor.name} {store.appointment.doctor.surname}</Badge></h4></ListGroup.Item>
-                  <ListGroup.Item><h4>{t('appointment.specialization')}: <Badge bg="info" pill>{store.appointment.doctor.specialization.name}</Badge></h4></ListGroup.Item>
-                  <ListGroup.Item><h4>{t('appointment.time')}: <Badge bg="info" pill>{store.appointment.interval.start} - {store.appointment.interval.end}</Badge></h4></ListGroup.Item>
-                  <ListGroup.Item><h4>{t('appointment.date')}: <Badge bg="info" pill>{new Date(store.appointment.date).toLocaleDateString()}</Badge></h4></ListGroup.Item>
-                  <ListGroup.Item><h4>{t('appointment.office')}: <Badge bg="info" pill>{store.appointment.office.number}</Badge></h4></ListGroup.Item>
-                  <ListGroup.Item><h4>{t('appointment.patientName')}: <Badge bg="info" pill>{store.appointment.patientName}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.doctorName')}: <Badge bg="success" pill>{store.appointment.doctor.name} {store.appointment.doctor.surname}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.specialization')}: <Badge bg="success" pill>{store.appointment.doctor.specialization.name}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.time')}: <Badge bg="success" pill>{store.appointment.interval.start} - {store.appointment.interval.end}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.date')}: <Badge bg="success" pill>{new Date(store.appointment.date).toLocaleDateString()}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.office')}: <Badge bg="success" pill>{store.appointment.office.number}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.patientName')}: <Badge bg="success" pill>{store.appointment.patientName}</Badge></h4></ListGroup.Item>
                 </ListGroup>
                 </>
               )}

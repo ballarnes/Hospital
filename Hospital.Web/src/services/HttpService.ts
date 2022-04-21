@@ -20,7 +20,7 @@ export interface ApiResponse<T> {
     status: number;
     statusText: string;
     headers: Headers;
-    data: T;
+    data: T | null;
 }
 
 export interface ApiHeader {
@@ -51,6 +51,7 @@ export default class DefaultHttpService implements HttpService {
             body: bodyRequest
         }
         const response = await fetch(`${url}`, requestOptions);
+
         return this.handleResponse(response);
     }
 
@@ -59,12 +60,30 @@ export default class DefaultHttpService implements HttpService {
           const message = await response.json()
           throw Error(message.error || i18n.t('app:error.unknown'))
         }
-        const result: ApiResponse<T>  = {
-            ...response,
-            data: await response.json()
-        };
-        return result;
-      }
+
+        if (response.headers.get("content-length") != "0") {
+            const result: ApiResponse<T>  = {
+                ...response,
+                headers: response.headers,
+                status: response.status,
+                statusText: response.statusText,
+                data: await response.json()
+            };
+
+            return result;
+        }
+        else {
+            const result: ApiResponse<T>  = {
+                ...response,
+                headers: response.headers,
+                status: response.status,
+                statusText: response.statusText,
+                data: null
+            };
+
+            return result;
+        }
+    }
 
     private getCredentials = (headers?: ApiHeader) : RequestCredentials => {
         return headers && !!headers.authorization 

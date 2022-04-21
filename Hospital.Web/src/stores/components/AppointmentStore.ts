@@ -20,6 +20,7 @@ export default class AppointmentStore {
     doctors: Doctor[] = [];
     intervals: Interval[] = [];
     offices: Office[] = [];
+    progress = 0;
     authorization = '';
     isLoading = false;
     pageIndex = 0;
@@ -56,8 +57,8 @@ export default class AppointmentStore {
             this.isLoading = true;
             this.authorization = authorization;
             const result = await this.specializationService.getByPage(this.pageIndex, this.pageSize);
-            this.specializations = result.data;
-            this.specialization = result.data[0].id;
+            this.specializations = result?.data ?? [];
+            this.specialization = result?.data[0].id ?? 0;
           } catch (e) {
             if (e instanceof Error) {
                 console.error(e.message);
@@ -73,14 +74,15 @@ export default class AppointmentStore {
     public selectSpecialization = async () => {
         this.specializationSelected = true;
         this.getDoctorBySpecId();
+        this.progress = 25;
     }
 
     public getDoctorBySpecId = async () => {
         try {
             this.isLoading = true;
             const result = await this.doctorService.getBySpecId(this.specialization);
-            this.doctors = result.data;
-            this.doctor = result.data[0].id;
+            this.doctors = result?.data ?? [];
+            this.doctor = result?.data[0].id ?? 0;
           } catch (e) {
             if (e instanceof Error) {
                 console.error(e.message);
@@ -96,10 +98,12 @@ export default class AppointmentStore {
 
     public selectDoctor = async () => {
         this.doctorSelected = true;
+        this.progress = 50;
     }
 
     public changeDate = async (date: Date) => {
         this.date = date;
+        this.progress = 62.5;
     }
 
     public getLocale = (language: string) => {
@@ -131,14 +135,15 @@ export default class AppointmentStore {
         this.patientNameSelected = true;
         this.dateSelected = true;
         this.getFreeIntervals();
+        this.progress = 75;
     }
 
     public getFreeIntervals = async () => {
         try {
             this.isLoading = true;
             const result = await this.intervalService.getFreeIntervals(this.doctor, this.date);
-            this.intervals = result.data;
-            this.interval = result.data[0].id;
+            this.intervals = result?.data ?? [];
+            this.interval = result?.data[0].id ?? 0;
           } catch (e) {
             if (e instanceof Error) {
                 console.error(e.message);
@@ -150,6 +155,7 @@ export default class AppointmentStore {
 
     public changeInterval = async (id: string) => {
         this.interval = parseInt(id);
+        this.progress += 25;
     }
 
     public selectInterval = async () => {
@@ -161,33 +167,41 @@ export default class AppointmentStore {
         try {
             this.isLoading = true;
             const result = await this.officeService.getFreeOffices(this.interval, this.date);
-            this.offices = result.data;
-            if (this.offices.length > 0) {
-                this.office = result.data[0].id;
-                this.officeSelected = true;
-                this.makeAppointment();
+
+            if (result?.data != undefined) {
+                this.offices = result.data;
+                if (this.offices.length > 0) {
+                    this.office = result.data[0].id;
+                    this.officeSelected = true;
+                    this.makeAppointment();
+                }
             }
+
           } catch (e) {
             if (e instanceof Error) {
                 console.error(e.message);
             }
           }
+        this.progress = 0;
         this.isLoading = false;
     }
 
     private makeAppointment = async () => {
         try {
-            this.isLoading = true;
             const result = await this.appointmentService.makeAppointment(this.doctor, this.interval, this.office, this.date, this.patientName, this.authorization);
-            this.id = result.id;
+            
+            if (result?.id != undefined) {
+                this.id = result.id
+            }
+
             if (this.id > 0) {
                 this.appointmentCreated = true;
             }
           } catch (e) {
             if (e instanceof Error) {
                 console.error(e.message);
+                this.appointmentCreated = false;
             }
           }
-        this.isLoading = false;
     }
 }

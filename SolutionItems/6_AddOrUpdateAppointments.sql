@@ -14,7 +14,7 @@ IF @id = 0
 		INSERT INTO Appointments([DoctorId], [IntervalId], [OfficeId], [Date], [PatientName])
 		VALUES(@doctorId, @intervalId, @officeId, @date, @patientName)
 
-		SET @id = @@IDENTITY
+		SET @id = scope_identity()
 		RETURN @id
 	END
 ELSE

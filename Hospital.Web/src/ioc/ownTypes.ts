@@ -8,6 +8,8 @@ export default {
     homePageStore: Symbol("homePageStore"),
     appointmentStore: Symbol("appointmentStore"),
     informationStore: Symbol("informationStore"),
-    specializationsPageStore: Symbol("specializationsPageStore")
+    specializationsPageStore: Symbol("specializationsPageStore"),
+    userProfilePageStore: Symbol("userProfilePageStore"),
+    updateAppointmentModalStore: Symbol("updateAppointmentModalStore")
 };
 

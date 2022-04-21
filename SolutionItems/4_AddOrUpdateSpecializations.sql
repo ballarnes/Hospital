@@ -11,7 +11,7 @@ IF @id = 0
 		INSERT INTO Specializations([Name], [Description])
 		VALUES(@name, @description)
 
-		SET @id = @@IDENTITY
+		SET @id = scope_identity()
 		RETURN @id
 	END
 ELSE

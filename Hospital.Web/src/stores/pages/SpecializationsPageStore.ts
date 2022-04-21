@@ -23,7 +23,7 @@ export default class SpecializationsPageStore  {
         try {
             this.isLoading = true;
             const result = await this.specializationService.getByPage(this.pageIndex, this.pageSize);
-            this.specializations = result.data;
+            this.specializations = result?.data ?? [];
             
           } catch (e) {
             if (e instanceof Error) {

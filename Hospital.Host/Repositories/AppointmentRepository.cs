@@ -66,6 +66,62 @@ namespace Hospital.Host.Repositories
             };
         }
 
+        public async Task<PaginatedItems<Appointment>> GetUpcomingAppointments(int pageIndex, int pageSize, string name)
+        {
+            var totalCount = await _connection.Connection
+                    .QueryAsync<int>($"SELECT COUNT(*) FROM Appointments WHERE PatientName = '{name}'");
+
+            var result = await _connection.Connection
+                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
+                SELECT a.*, d.*, s.*, i.*, o.*
+                FROM Appointments a
+                INNER JOIN Doctors d ON a.DoctorId = d.Id
+                INNER JOIN Specializations s ON d.SpecializationId = s.Id
+                INNER JOIN Intervals i ON a.IntervalId = i.Id
+                INNER JOIN Offices o ON a.OfficeId = o.Id
+                WHERE a.PatientName = '{name}' AND DATEADD(day, 1, a.Date) >= GETDATE()
+                ORDER BY a.Date, i.Start
+                OFFSET {pageIndex * pageSize} ROWS
+                FETCH NEXT {pageSize} ROWS ONLY", (a, d, s, i, o) =>
+                {
+                    var appointment = a;
+
+                    if (appointment.Doctor == null)
+                    {
+                        appointment.Doctor = d;
+                    }
+
+                    if (appointment.Doctor.Specialization == null)
+                    {
+                        appointment.Doctor.Specialization = s;
+                    }
+
+                    if (appointment.Interval == null)
+                    {
+                        appointment.Interval = i;
+                    }
+
+                    if (appointment.Office == null)
+                    {
+                        appointment.Office = o;
+                    }
+
+                    return appointment;
+                });
+
+            var upcomingAppointments = result
+                .ToList();
+
+            upcomingAppointments.RemoveAll(a => a.Interval.Start.Hours < DateTime.Now.Hour && a.Date == DateTime.Now.Date);
+
+            return new PaginatedItems<Appointment>()
+            {
+                PagesCount = (int)Math.Round((Convert.ToDecimal(totalCount.FirstOrDefault()) / pageSize), MidpointRounding.ToPositiveInfinity),
+                TotalCount = totalCount.FirstOrDefault(),
+                Data = upcomingAppointments
+            };
+        }
+
         public async Task<Appointment?> GetAppointmentById(int id)
         {
             var result = await _connection.Connection

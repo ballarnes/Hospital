@@ -11,7 +11,7 @@ IF @id = 0
 		INSERT INTO Intervals([Start], [End]) 
 		VALUES(@start, @end)
 
-		SET @id = @@IDENTITY
+		SET @id = scope_identity()
 		RETURN @id
 	END
 ELSE
