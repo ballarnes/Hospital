@@ -4,7 +4,7 @@ namespace Hospital.Host.Data
 {
     public class DbInitializer
     {
-        public static IEnumerable<Office> GetPreconfiguredOffices()
+        private static IEnumerable<Office> GetPreconfiguredOffices()
         {
             return new List<Office>()
             {
@@ -31,7 +31,7 @@ namespace Hospital.Host.Data
             };
         }
 
-        public static IEnumerable<Interval> GetPreconfiguredIntervals()
+        private static IEnumerable<Interval> GetPreconfiguredIntervals()
         {
             return new List<Interval>()
             {
@@ -113,7 +113,7 @@ namespace Hospital.Host.Data
             };
         }
 
-        public static IEnumerable<Specialization> GetPreconfiguredSpecializations()
+        private static IEnumerable<Specialization> GetPreconfiguredSpecializations()
         {
             return new List<Specialization>()
             {
@@ -140,7 +140,7 @@ namespace Hospital.Host.Data
             };
         }
 
-        public static IEnumerable<Doctor> GetPreconfiguredDoctors()
+        private static IEnumerable<Doctor> GetPreconfiguredDoctors()
         {
             return new List<Doctor>()
             {
@@ -175,6 +175,166 @@ namespace Hospital.Host.Data
                     SpecializationId = 4
                 }
             };
+        }
+
+        public static async void FillTablesIfEmpty(IConfiguration configuration, IHost host)
+        {
+            using (var connection = new SqlConnection(configuration["ConnectionString"]))
+            {
+                connection.Open();
+
+                var command = new SqlCommand();
+
+                command.CommandType = CommandType.StoredProcedure;
+                command.Connection = connection;
+
+                if (connection.Query<int>("SELECT COUNT(*) FROM Offices").FirstOrDefault() == 0)
+                {
+                    command.CommandText = "AddOrUpdateOffices";
+
+                    var numberParam = new SqlParameter
+                    {
+                        ParameterName = "@number",
+                        SqlDbType = SqlDbType.Int
+                    };
+
+                    foreach (var office in GetPreconfiguredOffices())
+                    {
+                        numberParam.Value = office.Number;
+
+                        command.Parameters.Add(numberParam);
+
+                        await AddObject(command, nameof(Office), host);
+
+                        command.Parameters.Clear();
+                    }
+                }
+
+                if (connection.Query<int>("SELECT COUNT(*) FROM Intervals").FirstOrDefault() == 0)
+                {
+                    command.CommandText = "AddOrUpdateIntervals";
+
+                    var startParam = new SqlParameter
+                    {
+                        ParameterName = "@start",
+                        SqlDbType = SqlDbType.Time
+                    };
+
+                    var endParam = new SqlParameter
+                    {
+                        ParameterName = "@end",
+                        SqlDbType = SqlDbType.Time
+                    };
+
+                    foreach (var interval in GetPreconfiguredIntervals())
+                    {
+                        startParam.Value = interval.Start;
+                        endParam.Value = interval.End;
+
+                        command.Parameters.Add(startParam);
+                        command.Parameters.Add(endParam);
+
+                        await AddObject(command, nameof(Interval), host);
+
+                        command.Parameters.Clear();
+                    }
+                }
+
+                if (connection.Query<int>("SELECT COUNT(*) FROM Specializations").FirstOrDefault() == 0)
+                {
+                    command.CommandText = "AddOrUpdateSpecializations";
+
+                    var nameParam = new SqlParameter
+                    {
+                        ParameterName = "@name",
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var descriptionParam = new SqlParameter
+                    {
+                        ParameterName = "@description",
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    foreach (var specialization in GetPreconfiguredSpecializations())
+                    {
+                        nameParam.Value = specialization.Name;
+                        descriptionParam.Value = specialization.Description;
+
+                        command.Parameters.Add(nameParam);
+                        command.Parameters.Add(descriptionParam);
+
+                        await AddObject(command, nameof(Specialization), host);
+
+                        command.Parameters.Clear();
+                    }
+                }
+
+                if (connection.Query<int>("SELECT COUNT(*) FROM Doctors").FirstOrDefault() == 0)
+                {
+                    command.CommandText = "AddOrUpdateDoctors";
+
+                    var nameParam = new SqlParameter
+                    {
+                        ParameterName = "@name",
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var surnameParam = new SqlParameter
+                    {
+                        ParameterName = "@surname",
+                        SqlDbType = SqlDbType.NVarChar
+                    };
+
+                    var specizalizationIdParam = new SqlParameter
+                    {
+                        ParameterName = "@specializationId",
+                        SqlDbType = SqlDbType.Int
+                    };
+
+                    foreach (var doctor in GetPreconfiguredDoctors())
+                    {
+                        nameParam.Value = doctor.Name;
+                        surnameParam.Value = doctor.Surname;
+                        specizalizationIdParam.Value = doctor.SpecializationId;
+
+                        command.Parameters.Add(nameParam);
+                        command.Parameters.Add(surnameParam);
+                        command.Parameters.Add(specizalizationIdParam);
+
+                        await AddObject(command, nameof(Doctor), host);
+
+                        command.Parameters.Clear();
+                    }
+                }
+
+                connection.Close();
+            }
+        }
+
+        private static async Task AddObject(SqlCommand command, string objectName, IHost host)
+        {
+            var services = host.Services.CreateScope().ServiceProvider;
+            var logger = services.GetRequiredService<ILogger<Program>>();
+
+            try
+            {
+                var returnParam = new SqlParameter
+                {
+                    ParameterName = "@id",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.ReturnValue
+                };
+
+                command.Parameters.Add(returnParam);
+
+                await command.ExecuteNonQueryAsync();
+                logger.LogInformation($"Created new {objectName} with ID: [{returnParam.Value}]");
+            }
+            catch (SqlException ex)
+            {
+                logger.LogError(ex, "An error occurred updating the table.");
+            }
         }
     }
 }

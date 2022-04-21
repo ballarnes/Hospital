@@ -210,6 +210,21 @@ namespace Hospital.Host.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(PaginatedItemsResponse<AppointmentDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetUpcomingAppointments(GetUpcomingAppointments request)
+        {
+            var result = await _appointmentService.GetUpcomingAppointments(request.PageIndex, request.PageSize, request.Name);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
         [ProducesResponseType(typeof(AppointmentDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAppointmentById(GetByIdRequest request)

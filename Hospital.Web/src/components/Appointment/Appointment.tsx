@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react'
-import { Alert, Button, Col, Container, FloatingLabel, Form, Row, Spinner } from 'react-bootstrap'
+import { Alert, Button, Col, Container, FloatingLabel, Form, ProgressBar, Row, Spinner } from 'react-bootstrap'
 import ownTypes from '../../ioc/ownTypes'
 import { observer } from 'mobx-react'
 import { useInjection } from '../../ioc/ioc.react'
 import { useTranslation } from 'react-i18next';
 import { AppointmentStore } from '../../stores/components'
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
 import { useAuth } from 'react-oidc-context'
+import DatePicker from "react-datepicker";
 
 const Appointment = observer(() => {
   const store = useInjection<AppointmentStore>(ownTypes.appointmentStore);
@@ -75,7 +73,7 @@ const Appointment = observer(() => {
                     minDate={new Date()}
                     maxDate={store.addDays(new Date(), 14)}
                     filterDate={isWeekday}
-                    className="mb-3 text-center"
+                    className="mb-3 text-center form-control"
                     withPortal
                   />
                   </Col>
@@ -171,6 +169,11 @@ const Appointment = observer(() => {
           </Col>
           </>
         )}
+        <Row className="justify-content-center">
+          <Col lg={4} md={6} xs>
+              <ProgressBar animated variant="success" now={store.progress} className='mt-4' />
+          </Col>
+        </Row>
       </Row>
     </Container>
   )

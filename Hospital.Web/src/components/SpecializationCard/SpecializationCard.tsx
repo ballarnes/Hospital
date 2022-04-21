@@ -16,14 +16,17 @@ const SpecializationCard = observer((props: Props) => {
   const { name, description } = props.specialization
 
   return (
-    <Card border="dark" style={{ width: '13rem', height: '17rem' }}>
+    <>
+    <Card border="dark" style={{ width: '13rem', height: '18rem' }}>
       <Card.Body>
         <Card.Title className="text-center">{name}</Card.Title>
+        <hr style={{ background: "#309896", height: 4, width: "100%" }} />
         <Card.Text className="text-break">
           {description}
         </Card.Text>
       </Card.Body>
     </Card>
+    </>
   )
 });
 

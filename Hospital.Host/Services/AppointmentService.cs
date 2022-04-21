@@ -44,6 +44,28 @@ namespace Hospital.Host.Services
             });
         }
 
+        public async Task<PaginatedItemsResponse<AppointmentDto>?> GetUpcomingAppointments(int pageIndex, int pageSize, string name)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.GetUpcomingAppointments(pageIndex, pageSize, name);
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new PaginatedItemsResponse<AppointmentDto>()
+                {
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
+                    PagesCount = result.PagesCount,
+                    TotalCount = result.TotalCount,
+                    Data = result.Data.Select(s => _mapper.Map<AppointmentDto>(s)).ToList()
+                };
+            });
+        }
+
         public async Task<AppointmentDto?> GetAppointmentById(int id)
         {
             return await ExecuteSafe(async () =>

@@ -111,6 +111,87 @@
         }
 
         [Fact]
+        public async Task GetUpcomingAppointments_Success()
+        {
+            // arrange
+            var testPageIndex = 0;
+            var testPageSize = 3;
+            var testPagesCount = 1;
+            var testTotalCount = 2;
+            var testName = "Test Test";
+
+            var paginatedItemsSuccess = new PaginatedItems<Appointment>()
+            {
+                Data = new List<Appointment>()
+                {
+                    _testAppointment
+                },
+                TotalCount = testTotalCount,
+                PagesCount = testPagesCount
+            };
+
+            var appointmentSuccess = new Appointment()
+            {
+                Id = _testAppointment.Id,
+                DoctorId = _testAppointment.DoctorId,
+                IntervalId = _testAppointment.IntervalId,
+                OfficeId = _testAppointment.OfficeId,
+                Date = _testAppointment.Date,
+                PatientName = _testAppointment.PatientName
+            };
+
+            var appointmentDtoSuccess = new AppointmentDto()
+            {
+                Id = _testAppointment.Id,
+                DoctorId = _testAppointment.DoctorId,
+                IntervalId = _testAppointment.IntervalId,
+                OfficeId = _testAppointment.OfficeId,
+                Date = _testAppointment.Date,
+                PatientName = _testAppointment.PatientName
+            };
+
+            _appointmentRepository.Setup(s => s.GetUpcomingAppointments(
+                It.Is<int>(i => i == testPageIndex),
+                It.Is<int>(i => i == testPageSize),
+                It.Is<string>(i => i == testName))).ReturnsAsync(paginatedItemsSuccess);
+
+            _mapper.Setup(s => s.Map<AppointmentDto>(
+                It.Is<Appointment>(i => i.Equals(appointmentSuccess)))).Returns(appointmentDtoSuccess);
+
+            // act
+            var result = await _appointmentService.GetUpcomingAppointments(testPageIndex, testPageSize, testName);
+
+            // assert
+            result.Should().NotBeNull();
+            result?.Data.Should().NotBeNull();
+            result?.PagesCount.Should().Be(testPagesCount);
+            result?.PageIndex.Should().Be(testPageIndex);
+            result?.PageSize.Should().Be(testPageSize);
+            result?.TotalCount.Should().Be(testTotalCount);
+        }
+
+        [Fact]
+        public async Task GetUpcomingAppointments_Failed()
+        {
+            // arrange
+            Task<PaginatedItems<Appointment>>? testResult = null;
+            var testPageIndex = int.MaxValue;
+            var testPageSize = int.MaxValue;
+            var testName = string.Empty;
+
+            _appointmentRepository.Setup(s => s.GetUpcomingAppointments(
+                It.Is<int>(i => i == testPageIndex),
+                It.Is<int>(i => i == testPageSize),
+                It.Is<string>(i => i == testName))).Returns(testResult!);
+
+            // act
+            var result = await _appointmentService.GetUpcomingAppointments(testPageIndex, testPageSize, testName);
+
+            // assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
         public async Task GetAppointmentById_Success()
         {
             // arrange
