@@ -68,9 +68,6 @@ namespace Hospital.Host.Repositories
 
         public async Task<PaginatedItems<Appointment>> GetUpcomingAppointments(int pageIndex, int pageSize, string name)
         {
-            var totalCount = await _connection.Connection
-                    .QueryAsync<int>($"SELECT COUNT(*) FROM Appointments WHERE PatientName = '{name}'");
-
             var result = await _connection.Connection
                 .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
                 SELECT a.*, d.*, s.*, i.*, o.*
@@ -80,9 +77,7 @@ namespace Hospital.Host.Repositories
                 INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
                 WHERE a.PatientName = '{name}' AND DATEADD(day, 1, a.Date) >= GETDATE()
-                ORDER BY a.Date, i.Start
-                OFFSET {pageIndex * pageSize} ROWS
-                FETCH NEXT {pageSize} ROWS ONLY", (a, d, s, i, o) =>
+                ORDER BY a.Date, i.Start", (a, d, s, i, o) =>
                 {
                     var appointment = a;
 
@@ -114,11 +109,22 @@ namespace Hospital.Host.Repositories
 
             upcomingAppointments.RemoveAll(a => a.Interval.Start.Hours < DateTime.Now.Hour && a.Date == DateTime.Now.Date);
 
+            var returnAppointments = new List<Appointment>();
+
+            for (var i = 0; i < pageSize; i++)
+            {
+                if (i + pageIndex * pageSize == upcomingAppointments.Count)
+                {
+                    break;
+                }
+                returnAppointments.Add(upcomingAppointments[i + pageIndex * pageSize]);
+            }
+
             return new PaginatedItems<Appointment>()
             {
-                PagesCount = (int)Math.Round((Convert.ToDecimal(totalCount.FirstOrDefault()) / pageSize), MidpointRounding.ToPositiveInfinity),
-                TotalCount = totalCount.FirstOrDefault(),
-                Data = upcomingAppointments
+                PagesCount = (int)Math.Round((Convert.ToDecimal(upcomingAppointments.Count) / pageSize), MidpointRounding.ToPositiveInfinity),
+                TotalCount = upcomingAppointments.Count,
+                Data = returnAppointments
             };
         }
 

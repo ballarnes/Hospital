@@ -13,8 +13,10 @@ export default class UserProfilePageStore  {
     intervals: Interval[] = [];
     appointmentToEdit: Appointment | undefined;
     isLoading = false;
-    pageSize = 2147483647;
+    pageSize = 5;
     pageIndex = 0;
+    pagesCount = 0;
+    totalCount = 0;
     name = '';
     interval = 0;
     update = false;
@@ -32,6 +34,11 @@ export default class UserProfilePageStore  {
             this.isLoading = true;
             const result = await this.appointmentService.getUpcomingAppointments(this.pageIndex, this.pageSize, this.name);
             this.appointments = result?.data ?? [];
+            if (this.appointments.length == 0) {
+                this.pageIndex -= 1;
+            }
+            this.pagesCount = result?.pagesCount ?? 0;
+            this.totalCount = result?.totalCount ?? 0;
           } catch (e) {
             if (e instanceof Error) {
                 console.error(e.message);
@@ -64,5 +71,9 @@ export default class UserProfilePageStore  {
 
     public changeInterval = async (id: string) => {
         this.interval = parseInt(id);
+    }
+
+    public changePage = async (number: number) => {
+        this.pageIndex = number - 1;
     }
 }
