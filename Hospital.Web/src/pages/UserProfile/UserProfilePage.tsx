@@ -9,6 +9,7 @@ import ownTypes from '../../ioc/ownTypes'
 import { useInjection } from '../../ioc/ioc.react'
 import UpcomingAppointment from '../../components/UpcomingAppointment'
 import { InfoCircle } from 'react-bootstrap-icons'
+import Pagination from '../../components/Pagination'
 
 const UserProfilePage = observer(() => {
   const store = useInjection<UserProfilePageStore>(ownTypes.userProfilePageStore);
@@ -96,6 +97,10 @@ const UserProfilePage = observer(() => {
           </>
         )}
       </Row>
+
+      <Pagination total={store.pagesCount} active={store.pageIndex+1} onChange={(val) => { 
+          store.changePage(val); 
+        }}/>
     </Container>
   )
 });
