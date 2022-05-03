@@ -1,4 +1,21 @@
-﻿namespace Hospital.UnitTests.Services
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Hospital.BusinessLogic.Services;
+using Hospital.BusinessLogic.Services.Interfaces;
+using Hospital.DataAccess.Data;
+using Hospital.DataAccess.Models.Dtos;
+using Hospital.DataAccess.Models.Entities;
+using Hospital.DataAccess.Repositories.Interfaces;
+using Infrastructure.Connection.Interfaces;
+using Moq;
+using Xunit;
+using AutoMapper;
+using FluentAssertions;
+
+namespace Hospital.UnitTests.Services
 {
     public class IntervalServiceTests
     {

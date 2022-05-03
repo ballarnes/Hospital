@@ -102,7 +102,7 @@ const Appointment = observer(() => {
                 <Form.Select className="mb-3" aria-label={t("selectInterval")} onChange={(ev) => store.changeInterval(ev.target.value)}>
                 <option disabled value='0'>{t("selectInterval")}</option>
                 {store.intervals?.map((interval, key) => (
-                  <option key={key} value={interval.id}>{interval.start} - {interval.end}</option>
+                  <option key={key} value={interval.id}>{interval.start.hours}:{interval.start.minutes}{interval.start.minutes == 0 && 0} - {interval.end.hours}:{interval.end.minutes}{interval.end.minutes == 0 && 0}</option>
                 ))}
                 </Form.Select>
                 <Button variant="outline-success" onClick={store.selectInterval}>OK</Button>

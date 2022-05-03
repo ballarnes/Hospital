@@ -1,5 +1,7 @@
+import { TimeSpanDto } from "./TimeSpanDto";
+
 export interface IntervalDto {
     id: number,
-    start: Date,
-    end: Date
+    start: TimeSpanDto,
+    end: TimeSpanDto
 }

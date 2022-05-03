@@ -1,7 +1,8 @@
-namespace Infrastructure.Configuration;
-
-public class AuthorizationConfig
+namespace Infrastructure.Configuration
 {
-    public string Authority { get; set; } = null!;
-    public string SiteAudience { get; set; } = null!;
+    public class AuthorizationConfig
+    {
+        public string Authority { get; set; } = null!;
+        public string SiteAudience { get; set; } = null!;
+    }
 }

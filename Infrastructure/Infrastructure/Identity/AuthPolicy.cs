@@ -1,8 +1,9 @@
-namespace Infrastructure.Identity;
-
-public static class AuthPolicy
+namespace Infrastructure.Identity
 {
-    public const string AllowClientPolicy = "AllowClient";
+    public static class AuthPolicy
+    {
+        public const string AllowClientPolicy = "AllowClient";
 
-    public const string AllowEndUserPolicy = "AllowEndUser";
+        public const string AllowEndUserPolicy = "AllowEndUser";
+    }
 }

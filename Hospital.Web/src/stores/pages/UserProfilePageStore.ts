@@ -32,6 +32,9 @@ export default class UserProfilePageStore  {
         try {
             this.update = false;
             this.isLoading = true;
+            if (this.pageIndex < 0) {
+                this.pageIndex = 0;
+            }
             const result = await this.appointmentService.getUpcomingAppointments(this.pageIndex, this.pageSize, this.name);
             this.appointments = result?.data ?? [];
             if (this.appointments.length == 0) {

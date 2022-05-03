@@ -26,7 +26,7 @@ const UpcomingAppointment = observer((props: Props) => {
       <td>{props.appointment.doctor.name}</td>
       <td>{props.appointment.doctor.surname}</td>
       <td>{props.appointment.doctor.specialization.name}</td>
-      <td>{props.appointment.interval.start} - {props.appointment.interval.end}</td>
+      <td>{props.appointment.interval.start.hours}:{props.appointment.interval.start.minutes}{props.appointment.interval.start.minutes == 0 && 0} - {props.appointment.interval.end.hours}:{props.appointment.interval.end.minutes}{props.appointment.interval.end.minutes == 0 && 0}</td>
       <td>{new Date(props.appointment.date).toLocaleDateString()}</td>
       <td>{props.appointment.office.number}</td>
       {(today == date && currentHour + 3 > start) ? (<><td></td></>) : (

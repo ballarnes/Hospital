@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace Infrastructure.Identity;
-
-public class ScopeRequirement : IAuthorizationRequirement
+namespace Infrastructure.Identity
 {
-    public ScopeRequirement()
+    public class ScopeRequirement : IAuthorizationRequirement
     {
+        public ScopeRequirement()
+        {
+        }
     }
 }

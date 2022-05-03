@@ -91,14 +91,14 @@ const UpdateAppointmentModal = observer((props: Props) => {
               className="mb-3"
             >
               {store.saved ? (
-                <p>{t('appointment.time')}: <strong>{store.appointment.interval.start} - {store.appointment.interval.end}</strong></p>
+                <p>{t('appointment.time')}: <strong>{store.appointment.interval.start.hours}:{store.appointment.interval.start.minutes}{store.appointment.interval.start.minutes == 0 && 0} - {store.appointment.interval.end.hours}:{store.appointment.interval.end.minutes}{store.appointment.interval.end.minutes == 0 && 0}</strong></p>
               ) : (
               <>
                 <Form.Label>{t("personalArea.updateModal.interval")}</Form.Label>
                 <Form.Select className="mb-3" aria-label={t("selectInterval")} onChange={(ev) => store.changeInterval(ev.target.value)}>
                   <option disabled value='0'>{t("selectInterval")}</option>
                   {store.intervals?.map((interval, key) => (
-                    <option key={key} value={interval.id}>{interval.start} - {interval.end}</option>
+                    <option key={key} value={interval.id}>{interval.start.hours}:{interval.start.minutes}{interval.start.minutes == 0 && 0} - {interval.end.hours}:{interval.end.minutes}{interval.end.minutes == 0 && 0}</option>
                   ))}
                 </Form.Select>
               </>

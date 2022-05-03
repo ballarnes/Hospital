@@ -1,5 +1,7 @@
+import { TimeSpan } from "./TimeSpan";
+
 export interface Interval {
     id: number,
-    start: Date,
-    end: Date
+    start: TimeSpan,
+    end: TimeSpan
 }
