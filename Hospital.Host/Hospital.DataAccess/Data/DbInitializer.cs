@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Threading.Tasks;
 using Hospital.DataAccess.Models.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Dapper;
 using Microsoft.AspNetCore.Builder;
@@ -39,88 +37,6 @@ namespace Hospital.DataAccess.Data
                 new Office()
                 {
                     Number = 105
-                }
-            };
-        }
-
-        private static IEnumerable<Interval> GetPreconfiguredIntervals()
-        {
-            return new List<Interval>()
-            {
-                new Interval()
-                {
-                    Start = new TimeSpan(9, 0, 0),
-                    End = new TimeSpan(9, 30, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(9, 30, 0),
-                    End = new TimeSpan(10, 0, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(10, 0, 0),
-                    End = new TimeSpan(10, 30, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(10, 30, 0),
-                    End = new TimeSpan(11, 0, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(11, 0, 0),
-                    End = new TimeSpan(11, 30, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(11, 30, 0),
-                    End = new TimeSpan(12, 0, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(12, 0, 0),
-                    End = new TimeSpan(12, 30, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(12, 30, 0),
-                    End = new TimeSpan(13, 0, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(14, 0, 0),
-                    End = new TimeSpan(14, 30, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(14, 30, 0),
-                    End = new TimeSpan(15, 0, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(15, 30, 0),
-                    End = new TimeSpan(16, 0, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(16, 0, 0),
-                    End = new TimeSpan(16, 30, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(16, 30, 0),
-                    End = new TimeSpan(17, 0, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(17, 0, 0),
-                    End = new TimeSpan(17, 30, 0)
-                },
-                new Interval()
-                {
-                    Start = new TimeSpan(17, 30, 0),
-                    End = new TimeSpan(18, 0, 0)
                 }
             };
         }
@@ -217,36 +133,6 @@ namespace Hospital.DataAccess.Data
                         command.Parameters.Add(numberParam);
 
                         await AddObject(command, nameof(Office), host);
-
-                        command.Parameters.Clear();
-                    }
-                }
-
-                if (connection.Query<int>("SELECT COUNT(*) FROM Intervals").FirstOrDefault() == 0)
-                {
-                    command.CommandText = "AddOrUpdateIntervals";
-
-                    var startParam = new SqlParameter
-                    {
-                        ParameterName = "@start",
-                        SqlDbType = SqlDbType.Time
-                    };
-
-                    var endParam = new SqlParameter
-                    {
-                        ParameterName = "@end",
-                        SqlDbType = SqlDbType.Time
-                    };
-
-                    foreach (var interval in GetPreconfiguredIntervals())
-                    {
-                        startParam.Value = interval.Start;
-                        endParam.Value = interval.End;
-
-                        command.Parameters.Add(startParam);
-                        command.Parameters.Add(endParam);
-
-                        await AddObject(command, nameof(Interval), host);
 
                         command.Parameters.Clear();
                     }

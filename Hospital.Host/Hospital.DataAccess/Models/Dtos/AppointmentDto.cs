@@ -10,15 +10,13 @@ namespace Hospital.DataAccess.Models.Dtos
 
         public DoctorDto Doctor { get; set; } = null!;
 
-        public int IntervalId { get; set; }
-
-        public IntervalDto Interval { get; set; } = null!;
-
         public int OfficeId { get; set; }
 
         public OfficeDto Office { get; set; } = null!;
 
-        public DateTime Date { get; set; }
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
 
         public string PatientName { get; set; } = null!;
     }

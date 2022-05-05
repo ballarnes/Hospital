@@ -83,7 +83,6 @@ namespace Hospital.PresentationLogic
                             {
                                 { "hospital.appointment", "Hospital Appointment Service" },
                                 { "hospital.doctor", "Hospital Doctor Service" },
-                                { "hospital.interval", "Hospital Interval Service" },
                                 { "hospital.office", "Hospital Office Service" },
                                 { "hospital.specialization", "Hospital Specialization Service" }
                             }
@@ -99,9 +98,6 @@ namespace Hospital.PresentationLogic
 
             services.AddTransient<IOfficeRepository, OfficeRepository>();
             services.AddTransient<IOfficeService, OfficeService>();
-
-            services.AddTransient<IIntervalRepository, IntervalRepository>();
-            services.AddTransient<IIntervalService, IntervalService>();
 
             services.AddTransient<ISpecializationRepository, SpecializationRepository>();
             services.AddTransient<ISpecializationService, SpecializationService>();

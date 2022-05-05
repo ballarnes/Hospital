@@ -9,7 +9,6 @@ namespace Hospital.PresentationLogic.Mapping
         public MappingProfile()
         {
             CreateMap<Office, OfficeDto>();
-            CreateMap<Interval, IntervalDto>();
             CreateMap<Specialization, SpecializationDto>();
             CreateMap<Doctor, DoctorDto>();
             CreateMap<Appointment, AppointmentDto>();

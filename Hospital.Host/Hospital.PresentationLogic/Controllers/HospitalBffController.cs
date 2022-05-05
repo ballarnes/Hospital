@@ -13,20 +13,17 @@ namespace Hospital.PresentationLogic.Controllers
     public class HospitalBffController : ControllerBase
     {
         private readonly IOfficeService _officeService;
-        private readonly IIntervalService _intervalService;
         private readonly ISpecializationService _specializationService;
         private readonly IDoctorService _doctorService;
         private readonly IAppointmentService _appointmentService;
 
         public HospitalBffController(
             IOfficeService officeService,
-            IIntervalService intervalService,
             ISpecializationService specializationService,
             IDoctorService doctorService,
             IAppointmentService appointmentService)
         {
             _officeService = officeService;
-            _intervalService = intervalService;
             _specializationService = specializationService;
             _doctorService = doctorService;
             _appointmentService = appointmentService;
@@ -63,60 +60,15 @@ namespace Hospital.PresentationLogic.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(PaginatedItemsResponse<OfficeDto>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetFreeOfficesByIntervalDate(GetFreeOfficesRequest request)
-        {
-            var result = await _officeService.GetFreeOfficesByIntervalDate(request.IntervalId, request.Date);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(PaginatedItemsResponse<IntervalDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ArrayResponse<OfficeDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetIntervals(PaginatedItemsRequest request)
+        public async Task<IActionResult> GetFreeOfficesByDate(GetFreeOfficesRequest request)
         {
-            var result = await _intervalService.GetIntervals(request.PageIndex, request.PageSize);
+            var result = await _officeService.GetFreeOfficesByDate(request.Date);
 
             if (result == null)
             {
                 return BadRequest();
-            }
-
-            return Ok(result);
-        }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(IntervalDto), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetIntervalById(GetByIdRequest request)
-        {
-            var result = await _intervalService.GetIntervalById(request.Id);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(PaginatedItemsResponse<IntervalDto>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetFreeIntervalsByDoctorDate(GetFreeIntervalsRequest request)
-        {
-            var result = await _intervalService.GetFreeIntervalsByDoctorDate(request.DoctorId, request.Date);
-
-            if (result == null)
-            {
-                return NotFound();
             }
 
             return Ok(result);
@@ -218,6 +170,21 @@ namespace Hospital.PresentationLogic.Controllers
         public async Task<IActionResult> GetUpcomingAppointments(GetUpcomingAppointments request)
         {
             var result = await _appointmentService.GetUpcomingAppointments(request.PageIndex, request.PageSize, request.Name);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ArrayResponse<AppointmentDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetAppointmentsByDoctorDate(GetAppointmentsByDoctorDate request)
+        {
+            var result = await _appointmentService.GetAppointmentsByDoctorDate(request.DoctorId, request.Date);
 
             if (result == null)
             {

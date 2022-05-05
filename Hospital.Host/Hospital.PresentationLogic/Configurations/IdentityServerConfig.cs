@@ -26,7 +26,6 @@ namespace Hospital.PresentationLogic.Configurations
                     {
                         new Scope("hospital.appointment"),
                         new Scope("hospital.doctor"),
-                        new Scope("hospital.interval"),
                         new Scope("hospital.office"),
                         new Scope("hospital.specialization")
                     },
@@ -66,7 +65,6 @@ namespace Hospital.PresentationLogic.Configurations
                     {
                         "hospital.appointment",
                         "hospital.doctor",
-                        "hospital.interval",
                         "hospital.office",
                         "hospital.specialization"
                     }

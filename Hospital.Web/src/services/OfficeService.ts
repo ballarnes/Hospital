@@ -3,10 +3,10 @@ import { inject, injectable } from "inversify";
 import { ContentType, MethodType } from "./HttpService";
 import type { HttpService } from "./HttpService";
 import ownTypes from "../ioc/ownTypes";
-import { OfficesDto } from "../dtos/OfficesDto";
+import { OfficesArrayDto } from "../dtos/OfficesArrayDto";
 
 export interface OfficeService {
-    getFreeOffices(intervalId: number, date: Date): Promise<OfficesDto | null>;
+    getFreeOfficesByDate(date: string): Promise<OfficesArrayDto | null>;
 }
 
 @injectable()
@@ -16,10 +16,10 @@ export default class DefaultOfficeService implements OfficeService {
     ) {
     }
 
-    public async getFreeOffices(intervalId: number, date: Date): Promise<OfficesDto | null> {
+    public async getFreeOfficesByDate(date: string): Promise<OfficesArrayDto | null> {
         const headers = { contentType: ContentType.Json};
-        const data = { intervalId, date };
-        const result = await this.httpService.send<OfficesDto>(`${process.env.BASE_API_URL}HospitalBff/GetFreeOfficesByIntervalDate/`, MethodType.POST, headers, data);
+        const data = { date };
+        const result = await this.httpService.send<OfficesArrayDto>(`${process.env.BASE_API_URL}HospitalBff/GetFreeOfficesByDate/`, MethodType.POST, headers, data);
         return result.data;
     }
 }

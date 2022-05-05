@@ -55,8 +55,8 @@ const Information = observer(() => {
                 <ListGroup variant="flush">
                   <ListGroup.Item><h4>{t('appointment.doctorName')}: <Badge bg="success" pill>{store.appointment.doctor.name} {store.appointment.doctor.surname}</Badge></h4></ListGroup.Item>
                   <ListGroup.Item><h4>{t('appointment.specialization')}: <Badge bg="success" pill>{store.appointment.doctor.specialization.name}</Badge></h4></ListGroup.Item>
-                  <ListGroup.Item><h4>{t('appointment.time')}: <Badge bg="success" pill>{store.appointment.interval.start.hours}:{store.appointment.interval.start.minutes}{store.appointment.interval.start.minutes == 0 && 0} - {store.appointment.interval.end.hours}:{store.appointment.interval.end.minutes}{store.appointment.interval.end.minutes == 0 && 0}</Badge></h4></ListGroup.Item>
-                  <ListGroup.Item><h4>{t('appointment.date')}: <Badge bg="success" pill>{new Date(store.appointment.date).toLocaleDateString()}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.time')}: <Badge bg="success" pill>{new Date(store.appointment.startDate).toLocaleTimeString()} - {new Date(store.appointment.endDate).toLocaleTimeString()}</Badge></h4></ListGroup.Item>
+                  <ListGroup.Item><h4>{t('appointment.date')}: <Badge bg="success" pill>{new Date(store.appointment.startDate).toLocaleDateString()}</Badge></h4></ListGroup.Item>
                   <ListGroup.Item><h4>{t('appointment.office')}: <Badge bg="success" pill>{store.appointment.office.number}</Badge></h4></ListGroup.Item>
                   <ListGroup.Item><h4>{t('appointment.patientName')}: <Badge bg="success" pill>{store.appointment.patientName}</Badge></h4></ListGroup.Item>
                 </ListGroup>

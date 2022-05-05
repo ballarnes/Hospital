@@ -27,6 +27,7 @@
     "logout": "Logout",
     "error": {
       "patientNameError": "Name must be entered!",
+      "dateError": "Selected date is incorrect! Please change the date.",
       "sorry": "Sorry",
       "noIntervals": "the doctor has no free time on this day!",
       "noOffices": "there are no free offices!",

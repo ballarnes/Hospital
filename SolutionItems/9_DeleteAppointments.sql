@@ -16,6 +16,6 @@ GO
 
 CREATE TRIGGER Appointments_DELETE ON Appointments
 AFTER DELETE AS
-INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [IntervalId], [OfficeId], [Date], [PatientName], Operation)
-SELECT Id, [DoctorId], [IntervalId], [OfficeId], [Date], [PatientName], 'DELETE'
+INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], Operation)
+SELECT Id, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], 'DELETE'
 FROM DELETED

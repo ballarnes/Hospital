@@ -3,14 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.PresentationLogic.Models.Requests
 {
-    public class UpdateIntervalRequest
+    public class GetAppointmentsByDoctorDate
     {
         [Required]
         [Range(0, int.MaxValue)]
-        public int Id { get; set; }
+        public int DoctorId { get; set; }
 
-        public TimeSpan Start { get; set; }
-
-        public TimeSpan End { get; set; }
+        [Required]
+        public DateTime Date { get; set; }
     }
 }

@@ -4,7 +4,6 @@ export default {
     doctorService: Symbol("doctorService"),
     officeService: Symbol("officeService"),
     appointmentService: Symbol("appointmentService"),
-    intervalService: Symbol("intervalService"),
     homePageStore: Symbol("homePageStore"),
     appointmentStore: Symbol("appointmentStore"),
     informationStore: Symbol("informationStore"),

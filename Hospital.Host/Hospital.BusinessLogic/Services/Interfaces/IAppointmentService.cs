@@ -9,9 +9,10 @@ namespace Hospital.BusinessLogic.Services.Interfaces
     {
         Task<PaginatedItemsResponse<AppointmentDto>> GetAppointments(int pageIndex, int pageSize);
         Task<PaginatedItemsResponse<AppointmentDto>> GetUpcomingAppointments(int pageIndex, int pageSize, string name);
+        Task<ArrayResponse<AppointmentDto>> GetAppointmentsByDoctorDate(int doctorId, DateTime date);
         Task<AppointmentDto> GetAppointmentById(int id);
-        Task<IdResponse<int>> AddAppointment(int doctorId, int intervalId, int officeId, DateTime date, string patientName);
-        Task<int?> UpdateAppointment(int id, int doctorId, int intervalId, int officeId, DateTime date, string patientName);
+        Task<IdResponse<int>> AddAppointment(int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName);
+        Task<int?> UpdateAppointment(int id, int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName);
         Task<int?> DeleteAppointment(int id);
     }
 }

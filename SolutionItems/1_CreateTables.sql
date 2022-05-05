@@ -29,38 +29,6 @@ END
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.objects 
-WHERE object_id = OBJECT_ID(N'[Hospital].[Intervals]') AND type in (N'U'))
-
-BEGIN
-CREATE TABLE Intervals(
-    Id int identity(1,1) primary key,
-	[Start] time not null,
-	[End] time not null
-) 
-
-END
-
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.objects 
-WHERE object_id = OBJECT_ID(N'[Hospital].[IntervalsChangeLog]') AND type in (N'U'))
-
-BEGIN
-CREATE TABLE IntervalsChangeLog(
-	Id int identity(1,1) primary key,
-	[IntervalId] int not null,
-	[Start] time not null,
-	[End] time not null,
-	[Operation] nvarchar(100) not null,
-	[User] nvarchar(100) not null default CURRENT_USER,
-	[ChangeDate] smalldatetime not null default GETDATE()
-)
-
-END
-
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.objects 
 WHERE object_id = OBJECT_ID(N'[Hospital].[Specializations]') AND type in (N'U'))
 
 BEGIN
@@ -133,9 +101,9 @@ BEGIN
 CREATE TABLE Appointments(
     Id int identity(1,1) primary key,
 	[DoctorId] int foreign key references Doctors(Id) on delete cascade,
-	[IntervalId] int foreign key references Intervals(Id) on delete cascade,
 	[OfficeId] int foreign key references Offices(Id) on delete cascade,
-	[Date] date not null,
+	[StartDate] datetime not null,
+	[EndDate] datetime not null,
 	[PatientName] nvarchar(50) not null
 ) 
 
@@ -151,9 +119,9 @@ CREATE TABLE AppointmentsChangeLog(
 	Id int identity(1,1) primary key,
 	[AppointmentId] int not null,
 	[DoctorId] int not null,
-	[IntervalId] int not null,
 	[OfficeId] int not null,
-	[Date] date not null,
+	[StartDate] datetime not null,
+	[EndDate] datetime not null,
 	[PatientName] nvarchar(50) not null,
 	[Operation] nvarchar(100) not null,
 	[User] nvarchar(100) not null default CURRENT_USER,

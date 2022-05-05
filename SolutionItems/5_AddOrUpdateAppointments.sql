@@ -3,16 +3,16 @@ DROP PROCEDURE AddOrUpdateAppointments
 GO
 CREATE PROCEDURE AddOrUpdateAppointments
     @doctorId int,
-	@intervalId int,
 	@officeId int,
-	@date date,
+	@startDate datetime,
+	@endDate datetime,
 	@patientName nvarchar(50),
 	@id int = 0
 AS
 IF @id = 0
 	BEGIN
-		INSERT INTO Appointments([DoctorId], [IntervalId], [OfficeId], [Date], [PatientName])
-		VALUES(@doctorId, @intervalId, @officeId, @date, @patientName)
+		INSERT INTO Appointments([DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName])
+		VALUES(@doctorId, @officeId, @startDate, @endDate, @patientName)
 
 		SET @id = scope_identity()
 		RETURN @id
@@ -22,9 +22,9 @@ ELSE
 		UPDATE Appointments
 		SET
 		[DoctorId] = @doctorId,
-		[IntervalId] = @intervalId,
 		[OfficeId] = @officeId,
-		[Date] = @date,
+		[StartDate] = @startDate,
+		[EndDate] = @endDate,
 		[PatientName] = @patientName
 		WHERE Id = @id
 	END
@@ -38,8 +38,8 @@ GO
 
 CREATE TRIGGER Appointments_INSERT ON Appointments
 AFTER INSERT AS
-INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [IntervalId], [OfficeId], [Date], [PatientName], Operation)
-SELECT Id, [DoctorId], [IntervalId], [OfficeId], [Date], [PatientName], 'INSERT'
+INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], Operation)
+SELECT Id, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], 'INSERT'
 FROM INSERTED
 
 GO
@@ -51,6 +51,6 @@ GO
 
 CREATE TRIGGER Appointments_UPDATE ON Appointments
 AFTER UPDATE AS
-INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [IntervalId], [OfficeId], [Date], [PatientName], Operation)
-SELECT Id, [DoctorId], [IntervalId], [OfficeId], [Date], [PatientName], 'UPDATE'
+INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], Operation)
+SELECT Id, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], 'UPDATE'
 FROM INSERTED

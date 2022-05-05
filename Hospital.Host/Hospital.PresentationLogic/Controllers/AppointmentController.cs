@@ -28,7 +28,7 @@ namespace Hospital.PresentationLogic.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddAppointment(AddAppointmentRequest request)
         {
-            var result = await _appointmentService.AddAppointment(request.DoctorId, request.IntervalId, request.OfficeId, request.Date, request.PatientName);
+            var result = await _appointmentService.AddAppointment(request.DoctorId, request.OfficeId, request.StartDate, request.EndDate, request.PatientName);
 
             if (result == null)
             {
@@ -43,7 +43,7 @@ namespace Hospital.PresentationLogic.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateAppointment(UpdateAppointmentRequest request)
         {
-            var result = await _appointmentService.UpdateAppointment(request.Id, request.DoctorId, request.IntervalId, request.OfficeId, request.Date, request.PatientName);
+            var result = await _appointmentService.UpdateAppointment(request.Id, request.DoctorId, request.OfficeId, request.StartDate, request.EndDate, request.PatientName);
 
             if (result == null)
             {

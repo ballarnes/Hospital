@@ -65,24 +65,21 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
-        public async Task<PaginatedItemsResponse<OfficeDto>> GetFreeOfficesByIntervalDate(int intervalId, DateTime date)
+        public async Task<ArrayResponse<OfficeDto>> GetFreeOfficesByDate(DateTime date)
         {
             return await ExecuteSafe(async () =>
             {
-                var result = await _officeRepository.GetFreeOfficesByIntervalDate(intervalId, date);
+                var result = await _officeRepository.GetFreeOfficesByDate(date);
 
                 if (result == null)
                 {
                     return null;
                 }
 
-                return new PaginatedItemsResponse<OfficeDto>()
+                return new ArrayResponse<OfficeDto>()
                 {
-                    PageIndex = 0,
-                    PageSize = result.TotalCount,
-                    PagesCount = result.PagesCount,
-                    TotalCount = result.TotalCount,
-                    Data = result.Data.Select(s => _mapper.Map<OfficeDto>(s)).ToList()
+                    TotalCount = result.Count,
+                    Data = result.Select(s => _mapper.Map<OfficeDto>(s)).ToList()
                 };
             });
         }

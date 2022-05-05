@@ -6,11 +6,11 @@ namespace Hospital.BusinessLogic.Models.Requests
     {
         public int DoctorId { get; set; }
 
-        public int IntervalId { get; set; }
-
         public int OfficeId { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
 
         public string PatientName { get; set; } = null!;
     }

@@ -57,26 +57,20 @@ namespace Hospital.DataAccess.Repositories
             };
         }
 
-        public async Task<PaginatedItems<Office>> GetFreeOfficesByIntervalDate(int intervalId, DateTime date)
+        public async Task<List<Office>> GetFreeOfficesByDate(DateTime date)
         {
             var allOffices = await _connection.Connection
                 .QueryAsync<Office>(@$"
                 SELECT * FROM Offices
                 ORDER BY Id");
 
-            var appointmentsByIntervalDate = await _connection.Connection
-                .QueryAsync<Appointment, Interval, Office, Appointment>($@"
+            var appointmentsByDate = await _connection.Connection
+                .QueryAsync<Appointment, Office, Appointment>($@"
                 SELECT * FROM Appointments a
-                INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
-                WHERE (a.IntervalId = {intervalId} AND a.Date LIKE '{date.ToString("yyyy-MM-dd")}')", (a, i, o) =>
+                WHERE CONVERT(varchar, a.StartDate, 126) LIKE '{date.ToString("yyyy-MM-ddTHH:mm:ss")}'", (a, o) =>
                 {
                     var appointment = a;
-
-                    if (appointment.Interval == null)
-                    {
-                        appointment.Interval = i;
-                    }
 
                     if (appointment.Office == null)
                     {
@@ -88,7 +82,7 @@ namespace Hospital.DataAccess.Repositories
 
             var freeOffices = new List<Office>(allOffices);
 
-            foreach (var appointment in appointmentsByIntervalDate)
+            foreach (var appointment in appointmentsByDate)
             {
                 if (freeOffices.Any(o => o.Id.Equals(appointment.Office.Id)))
                 {
@@ -96,12 +90,7 @@ namespace Hospital.DataAccess.Repositories
                 }
             }
 
-            return new PaginatedItems<Office>()
-            {
-                PagesCount = 1,
-                TotalCount = freeOffices.Count,
-                Data = freeOffices
-            };
+            return freeOffices.ToList();
         }
 
         public async Task<int?> AddOffice(int number)

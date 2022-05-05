@@ -71,6 +71,25 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
+        public async Task<ArrayResponse<AppointmentDto>> GetAppointmentsByDoctorDate(int doctorId, DateTime date)
+        {
+            return await ExecuteSafe(async () =>
+            {
+                var result = await _appointmentRepository.GetAppointmentsByDoctorDate(doctorId, date);
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return new ArrayResponse<AppointmentDto>()
+                {
+                    TotalCount = result.Count,
+                    Data = result.Select(s => _mapper.Map<AppointmentDto>(s)).ToList()
+                };
+            });
+        }
+
         public async Task<AppointmentDto> GetAppointmentById(int id)
         {
             return await ExecuteSafe(async () =>
@@ -81,11 +100,11 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
-        public async Task<IdResponse<int>> AddAppointment(int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        public async Task<IdResponse<int>> AddAppointment(int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName)
         {
             return await ExecuteSafe(async () =>
             {
-                var result = await _appointmentRepository.AddAppointment(doctorId, intervalId, officeId, date, patientName);
+                var result = await _appointmentRepository.AddAppointment(doctorId, officeId, startDate, endDate, patientName);
 
                 if (result == default)
                 {
@@ -99,11 +118,11 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
-        public async Task<int?> UpdateAppointment(int id, int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        public async Task<int?> UpdateAppointment(int id, int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName)
         {
             return await ExecuteSafe(async () =>
             {
-                var result = await _appointmentRepository.UpdateAppointment(id, doctorId, intervalId, officeId, date, patientName);
+                var result = await _appointmentRepository.UpdateAppointment(id, doctorId, officeId, startDate, endDate, patientName);
 
                 if (result == default)
                 {

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { AppointmentStore } from '../../stores/components'
 import { useAuth } from 'react-oidc-context'
 import DatePicker from "react-datepicker";
+import { setMinutes, setHours, addDays } from "date-fns";
 
 const Appointment = observer(() => {
   const store = useInjection<AppointmentStore>(ownTypes.appointmentStore);
@@ -69,14 +70,21 @@ const Appointment = observer(() => {
                     locale={store.getLocale(i18n.language)}
                     dateFormat={store.getDateFormat(i18n.language)}
                     selected={store.date}
+                    showTimeSelect
                     onChange={(date: Date) => store.changeDate(date)}
-                    minDate={new Date()}
-                    maxDate={store.addDays(new Date(), 14)}
+                    minDate={new Date().getHours() > 18 ? (addDays(new Date(), 1)) : (new Date())}
+                    maxDate={addDays(new Date(), 14)}
+                    minTime={store.date.getDate() == new Date().getDate() ? (new Date()) : (setHours(setMinutes(store.date, 0), 9))}
+                    maxTime={setHours(setMinutes(store.date, 30), 18)}
                     filterDate={isWeekday}
+                    excludeTimes={store.excludedTimes}
                     className="mb-3 text-center form-control"
                     withPortal
                   />
                   </Col>
+                {store.dateError && (
+                  <p style={{ color: 'red', fontSize: 14 }}>{t("error.dateError")}</p>
+                )}
                 </Row>
                 <FloatingLabel
                 controlId="floatingInput"
@@ -96,31 +104,7 @@ const Appointment = observer(() => {
                 )}
                 </>
               )}
-              {(store.dateSelected && store.patientNameSelected && store.intervals.length > 0 && !store.officeSelected) && (
-                <>
-                <h3 className='mb-4 text-center'>{t('selectInterval')}</h3>
-                <Form.Select className="mb-3" aria-label={t("selectInterval")} onChange={(ev) => store.changeInterval(ev.target.value)}>
-                <option disabled value='0'>{t("selectInterval")}</option>
-                {store.intervals?.map((interval, key) => (
-                  <option key={key} value={interval.id}>{interval.start.hours}:{interval.start.minutes}{interval.start.minutes == 0 && 0} - {interval.end.hours}:{interval.end.minutes}{interval.end.minutes == 0 && 0}</option>
-                ))}
-                </Form.Select>
-                <Button variant="outline-success" onClick={store.selectInterval}>OK</Button>
-                </>
-              )}
-              {(store.dateSelected && store.patientNameSelected && store.intervals.length == 0 && !store.officeSelected) && (
-                  <Alert variant="danger">
-                  <Alert.Heading>{t("error.sorry")},</Alert.Heading>
-                  <p>
-                    {t("error.noIntervals")}
-                  </p>
-                  <hr />
-                  <p className="mb-0 d-flex justify-content-end">
-                    {t("error.tryToChangeTheDoctorOrDate")}
-                  </p>
-                </Alert>
-                )}
-              {store.intervalSelected && (
+              {store.dateSelected && (
                   <>
                   {store.officeSelected ? (
                   <>

@@ -15,8 +15,8 @@ const UpcomingAppointment = observer((props: Props) => {
 
   const today = new Date().getDate();
   const currentHour = new Date().getHours();
-  const date = Number(props.appointment.date.toString().substring(8, 10));
-  const start = Number(props.appointment.interval.start.toString().split(':')[0]);
+  const date = Number(props.appointment.startDate.toString().substring(8, 10));
+  const start = Number(new Date(props.appointment.startDate).getHours().toString().split(':')[0]);
 
   const [modalShow, setModalShow] = useState(false);
 
@@ -26,8 +26,8 @@ const UpcomingAppointment = observer((props: Props) => {
       <td>{props.appointment.doctor.name}</td>
       <td>{props.appointment.doctor.surname}</td>
       <td>{props.appointment.doctor.specialization.name}</td>
-      <td>{props.appointment.interval.start.hours}:{props.appointment.interval.start.minutes}{props.appointment.interval.start.minutes == 0 && 0} - {props.appointment.interval.end.hours}:{props.appointment.interval.end.minutes}{props.appointment.interval.end.minutes == 0 && 0}</td>
-      <td>{new Date(props.appointment.date).toLocaleDateString()}</td>
+      <td>{new Date(props.appointment.startDate).toLocaleTimeString()} - {new Date(props.appointment.endDate).toLocaleTimeString()}</td>
+      <td>{new Date(props.appointment.startDate).toLocaleDateString()}</td>
       <td>{props.appointment.office.number}</td>
       {(today == date && currentHour + 3 > start) ? (<><td></td></>) : (
         <>

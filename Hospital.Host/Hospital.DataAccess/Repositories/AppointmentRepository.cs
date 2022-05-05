@@ -28,16 +28,15 @@ namespace Hospital.DataAccess.Repositories
                     .QueryAsync<int>("SELECT COUNT(*) FROM Appointments");
 
             var result = await _connection.Connection
-                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
-                SELECT a.*, d.*, s.*, i.*, o.*
+                .QueryAsync<Appointment, Doctor, Specialization, Office, Appointment>(@$"
+                SELECT a.*, d.*, s.*, o.*
                 FROM Appointments a
                 INNER JOIN Doctors d ON a.DoctorId = d.Id
                 INNER JOIN Specializations s ON d.SpecializationId = s.Id
-                INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
                 ORDER BY a.Id
                 OFFSET {pageIndex * pageSize} ROWS
-                FETCH NEXT {pageSize} ROWS ONLY", (a, d, s, i, o) =>
+                FETCH NEXT {pageSize} ROWS ONLY", (a, d, s, o) =>
                 {
                     var appointment = a;
 
@@ -49,11 +48,6 @@ namespace Hospital.DataAccess.Repositories
                     if (appointment.Doctor.Specialization == null)
                     {
                         appointment.Doctor.Specialization = s;
-                    }
-
-                    if (appointment.Interval == null)
-                    {
-                        appointment.Interval = i;
                     }
 
                     if (appointment.Office == null)
@@ -75,15 +69,14 @@ namespace Hospital.DataAccess.Repositories
         public async Task<PaginatedItems<Appointment>> GetUpcomingAppointments(int pageIndex, int pageSize, string name)
         {
             var result = await _connection.Connection
-                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
-                SELECT a.*, d.*, s.*, i.*, o.*
+                .QueryAsync<Appointment, Doctor, Specialization, Office, Appointment>(@$"
+                SELECT a.*, d.*, s.*, o.*
                 FROM Appointments a
                 INNER JOIN Doctors d ON a.DoctorId = d.Id
                 INNER JOIN Specializations s ON d.SpecializationId = s.Id
-                INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
-                WHERE a.PatientName = '{name}' AND DATEADD(day, 1, a.Date) >= GETDATE()
-                ORDER BY a.Date, i.Start", (a, d, s, i, o) =>
+                WHERE a.PatientName = '{name}' AND DATEADD(day, 1, a.StartDate) >= GETDATE()
+                ORDER BY a.StartDate", (a, d, s, o) =>
                 {
                     var appointment = a;
 
@@ -97,11 +90,6 @@ namespace Hospital.DataAccess.Repositories
                         appointment.Doctor.Specialization = s;
                     }
 
-                    if (appointment.Interval == null)
-                    {
-                        appointment.Interval = i;
-                    }
-
                     if (appointment.Office == null)
                     {
                         appointment.Office = o;
@@ -113,7 +101,7 @@ namespace Hospital.DataAccess.Repositories
             var upcomingAppointments = result
                 .ToList();
 
-            upcomingAppointments.RemoveAll(a => a.Interval.Start.Hours < DateTime.Now.Hour && a.Date == DateTime.Now.Date);
+            upcomingAppointments.RemoveAll(a => a.StartDate.Hour < DateTime.Now.Hour && a.StartDate.Date == DateTime.Now.Date);
 
             var returnAppointments = new List<Appointment>();
 
@@ -134,17 +122,17 @@ namespace Hospital.DataAccess.Repositories
             };
         }
 
-        public async Task<Appointment> GetAppointmentById(int id)
+        public async Task<List<Appointment>> GetAppointmentsByDoctorDate(int doctorId, DateTime date)
         {
             var result = await _connection.Connection
-                .QueryAsync<Appointment, Doctor, Specialization, Interval, Office, Appointment>(@$"
-                SELECT a.*, d.*, s.*, i.*, o.*
+                .QueryAsync<Appointment, Doctor, Specialization, Office, Appointment>(@$"
+                SELECT a.*, d.*, s.*, o.*
                 FROM Appointments a
                 INNER JOIN Doctors d ON a.DoctorId = d.Id
                 INNER JOIN Specializations s ON d.SpecializationId = s.Id
-                INNER JOIN Intervals i ON a.IntervalId = i.Id
                 INNER JOIN Offices o ON a.OfficeId = o.Id
-                WHERE a.Id = {id}", (a, d, s, i, o) =>
+                WHERE a.DoctorId = '{doctorId}' AND DATEADD(dd, 0, DATEDIFF(dd, 0, a.StartDate)) = '{date.Date.ToString("yyyy-MM-ddTHH:mm:ss")}'
+                ORDER BY a.StartDate", (a, d, s, o) =>
                 {
                     var appointment = a;
 
@@ -158,9 +146,38 @@ namespace Hospital.DataAccess.Repositories
                         appointment.Doctor.Specialization = s;
                     }
 
-                    if (appointment.Interval == null)
+                    if (appointment.Office == null)
                     {
-                        appointment.Interval = i;
+                        appointment.Office = o;
+                    }
+
+                    return appointment;
+                });
+
+            return result.ToList();
+        }
+
+        public async Task<Appointment> GetAppointmentById(int id)
+        {
+            var result = await _connection.Connection
+                .QueryAsync<Appointment, Doctor, Specialization, Office, Appointment>(@$"
+                SELECT a.*, d.*, s.*, o.*
+                FROM Appointments a
+                INNER JOIN Doctors d ON a.DoctorId = d.Id
+                INNER JOIN Specializations s ON d.SpecializationId = s.Id
+                INNER JOIN Offices o ON a.OfficeId = o.Id
+                WHERE a.Id = {id}", (a, d, s, o) =>
+                {
+                    var appointment = a;
+
+                    if (appointment.Doctor == null)
+                    {
+                        appointment.Doctor = d;
+                    }
+
+                    if (appointment.Doctor.Specialization == null)
+                    {
+                        appointment.Doctor.Specialization = s;
                     }
 
                     if (appointment.Office == null)
@@ -181,18 +198,17 @@ namespace Hospital.DataAccess.Repositories
             return new Appointment()
             {
                 Id = doctor.Id,
-                Date = doctor.Date,
+                StartDate = doctor.StartDate,
+                EndDate = doctor.EndDate,
                 Doctor = doctor.Doctor,
                 DoctorId = doctor.DoctorId,
-                Interval = doctor.Interval,
                 PatientName = doctor.PatientName,
-                IntervalId = doctor.IntervalId,
                 OfficeId = doctor.OfficeId,
                 Office = doctor.Office
             };
         }
 
-        public async Task<int?> AddAppointment(int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        public async Task<int?> AddAppointment(int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName)
         {
             var command = new SqlCommand("AddOrUpdateAppointments");
             command.CommandType = CommandType.StoredProcedure;
@@ -205,13 +221,6 @@ namespace Hospital.DataAccess.Repositories
                 Value = doctorId
             };
 
-            var intervalIdParam = new SqlParameter
-            {
-                ParameterName = "@intervalId",
-                SqlDbType = SqlDbType.Int,
-                Value = intervalId
-            };
-
             var officeIdParam = new SqlParameter
             {
                 ParameterName = "@officeId",
@@ -219,11 +228,18 @@ namespace Hospital.DataAccess.Repositories
                 Value = officeId
             };
 
-            var dateParam = new SqlParameter
+            var startDateParam = new SqlParameter
             {
-                ParameterName = "@date",
-                SqlDbType = SqlDbType.Date,
-                Value = date
+                ParameterName = "@startDate",
+                SqlDbType = SqlDbType.DateTime,
+                Value = startDate
+            };
+
+            var endDateParam = new SqlParameter
+            {
+                ParameterName = "@endDate",
+                SqlDbType = SqlDbType.DateTime,
+                Value = endDate
             };
 
             var patientNameParam = new SqlParameter
@@ -241,9 +257,9 @@ namespace Hospital.DataAccess.Repositories
             };
 
             command.Parameters.Add(doctorIdParam);
-            command.Parameters.Add(intervalIdParam);
             command.Parameters.Add(officeIdParam);
-            command.Parameters.Add(dateParam);
+            command.Parameters.Add(startDateParam);
+            command.Parameters.Add(endDateParam);
             command.Parameters.Add(patientNameParam);
             command.Parameters.Add(returnParam);
 
@@ -257,7 +273,7 @@ namespace Hospital.DataAccess.Repositories
             return (int)returnParam.Value;
         }
 
-        public async Task<int?> UpdateAppointment(int id, int doctorId, int intervalId, int officeId, DateTime date, string patientName)
+        public async Task<int?> UpdateAppointment(int id, int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName)
         {
             var command = new SqlCommand("AddOrUpdateAppointments");
             command.CommandType = CommandType.StoredProcedure;
@@ -277,13 +293,6 @@ namespace Hospital.DataAccess.Repositories
                 Value = doctorId
             };
 
-            var intervalIdParam = new SqlParameter
-            {
-                ParameterName = "@intervalId",
-                SqlDbType = SqlDbType.Int,
-                Value = intervalId
-            };
-
             var officeIdParam = new SqlParameter
             {
                 ParameterName = "@officeId",
@@ -291,11 +300,18 @@ namespace Hospital.DataAccess.Repositories
                 Value = officeId
             };
 
-            var dateParam = new SqlParameter
+            var startDateParam = new SqlParameter
             {
-                ParameterName = "@date",
-                SqlDbType = SqlDbType.Date,
-                Value = date
+                ParameterName = "@startDate",
+                SqlDbType = SqlDbType.DateTime,
+                Value = startDate
+            };
+
+            var endDateParam = new SqlParameter
+            {
+                ParameterName = "@endDate",
+                SqlDbType = SqlDbType.DateTime,
+                Value = endDate
             };
 
             var patientNameParam = new SqlParameter
@@ -307,9 +323,9 @@ namespace Hospital.DataAccess.Repositories
 
             command.Parameters.Add(idParam);
             command.Parameters.Add(doctorIdParam);
-            command.Parameters.Add(intervalIdParam);
             command.Parameters.Add(officeIdParam);
-            command.Parameters.Add(dateParam);
+            command.Parameters.Add(startDateParam);
+            command.Parameters.Add(endDateParam);
             command.Parameters.Add(patientNameParam);
 
             var result = await command.ExecuteNonQueryAsync();
