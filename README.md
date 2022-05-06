@@ -6,10 +6,9 @@
 > Microsoft SQL Server and Visual Studio must be installed!
 
 1. Create database named **"Hospital"**.
-2. Open **"SolutionItems"** folder.
-3. Run all numbered files one by one.
-4. Open **"Hospital.sln"**.
-5. Start debug mode.
+2. Open **"Hospital.sln"**.
+3. Start **"Hospital.DatabaseInitialization"** project and wait until the tables and stored procedures will be created.
+4. Start **"Hospital.PresentationLogic"** project.
 
 
 ## How to run UI
