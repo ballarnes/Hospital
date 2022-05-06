@@ -1,0 +1,554 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="10_CreateOfficesTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[Offices]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE Offices(
+    Id int identity(1,1) primary key,
+	[Number] int not null
+) 
+
+END</value>
+  </data>
+  <data name="11_CreateOfficesChangeLogTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[OfficesChangeLog]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE OfficesChangeLog(
+	Id int identity(1,1) primary key,
+	[OfficeId] int not null,
+	[Number] int not null,
+	[Operation] nvarchar(100) not null,
+	[User] nvarchar(100) not null default CURRENT_USER,
+	[ChangeDate] smalldatetime not null default GETDATE()
+)
+
+END</value>
+  </data>
+  <data name="12_CreateSpecializationsTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[Specializations]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE Specializations(
+    Id int identity(1,1) primary key,
+	[Name] nvarchar(50) not null,
+	[Description] nvarchar(300) not null
+) 
+
+END</value>
+  </data>
+  <data name="13_CreateSpecializationsChangeLogTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[SpecializationsChangeLog]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE SpecializationsChangeLog(
+	Id int identity(1,1) primary key,
+	[SpecializationId] int not null,
+	[Name] nvarchar(50) not null,
+	[Description] nvarchar(300) not null,
+	[Operation] nvarchar(100) not null,
+	[User] nvarchar(100) not null default CURRENT_USER,
+	[ChangeDate] smalldatetime not null default GETDATE()
+)
+
+END</value>
+  </data>
+  <data name="14_CreateDoctorsTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[Doctors]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE Doctors(
+    Id int identity(1,1) primary key,
+	[Name] nvarchar(50) not null,
+	[Surname] nvarchar(50) not null,
+	[SpecializationId] int foreign key references Specializations(Id)
+) 
+
+END</value>
+  </data>
+  <data name="15_CreateDoctorsChangeLogTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[DoctorsChangeLog]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE DoctorsChangeLog(
+	Id int identity(1,1) primary key,
+	[DoctorId] int not null,
+	[Name] nvarchar(50) not null,
+	[Surname] nvarchar(50) not null,
+	[SpecializationId] int not null,
+	[Operation] nvarchar(100) not null,
+	[User] nvarchar(100) not null default CURRENT_USER,
+	[ChangeDate] smalldatetime not null default GETDATE()
+)
+
+END</value>
+  </data>
+  <data name="16_CreateAppointmentsTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[Appointments]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE Appointments(
+    Id int identity(1,1) primary key,
+	[DoctorId] int foreign key references Doctors(Id) on delete cascade,
+	[OfficeId] int foreign key references Offices(Id) on delete cascade,
+	[StartDate] datetime not null,
+	[EndDate] datetime not null,
+	[PatientName] nvarchar(50) not null
+) 
+
+END</value>
+  </data>
+  <data name="17_CreateAppointmentsChangeLogTable" xml:space="preserve">
+    <value>IF NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[Hospital].[AppointmentsChangeLog]') AND type in (N'U'))
+
+BEGIN
+CREATE TABLE AppointmentsChangeLog(
+	Id int identity(1,1) primary key,
+	[AppointmentId] int not null,
+	[DoctorId] int not null,
+	[OfficeId] int not null,
+	[StartDate] datetime not null,
+	[EndDate] datetime not null,
+	[PatientName] nvarchar(50) not null,
+	[Operation] nvarchar(100) not null,
+	[User] nvarchar(100) not null default CURRENT_USER,
+	[ChangeDate] smalldatetime not null default GETDATE()
+)
+
+END</value>
+  </data>
+  <data name="18_AddOrUpdateOffices" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateOffices')
+DROP PROCEDURE AddOrUpdateOffices
+
+GO
+
+CREATE PROCEDURE AddOrUpdateOffices
+    @number int,
+	@id int = 0
+AS
+IF @id = 0
+	BEGIN
+		INSERT INTO Offices(Number) 
+		VALUES(@number)
+
+		SET @id = scope_identity()
+		RETURN @id
+	END
+ELSE
+	BEGIN
+		UPDATE Offices
+		SET
+		[Number] = @number
+		WHERE Id = @id
+	END
+	
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Offices_INSERT')
+DROP TRIGGER Offices_INSERT;
+
+GO
+
+CREATE TRIGGER Offices_INSERT ON Offices
+AFTER INSERT AS
+INSERT INTO OfficesChangeLog (OfficeId, Number, Operation)
+SELECT Id, Number, 'INSERT'
+FROM INSERTED
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Offices_UPDATE')
+DROP TRIGGER Offices_UPDATE;
+
+GO
+
+CREATE TRIGGER Offices_UPDATE ON Offices
+AFTER UPDATE AS
+INSERT INTO OfficesChangeLog (OfficeId, Number, Operation)
+SELECT Id, Number, 'UPDATE'
+FROM INSERTED</value>
+  </data>
+  <data name="19_AddOrUpdateSpecializations" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateSpecializations')
+DROP PROCEDURE AddOrUpdateSpecializations
+GO
+CREATE PROCEDURE AddOrUpdateSpecializations
+    @name nvarchar(50),
+	@description nvarchar(300),
+	@id int = 0
+AS
+IF @id = 0
+	BEGIN
+		INSERT INTO Specializations([Name], [Description])
+		VALUES(@name, @description)
+
+		SET @id = scope_identity()
+		RETURN @id
+	END
+ELSE
+	BEGIN
+		UPDATE Specializations
+		SET
+		[Name] = @name,
+		[Description] = @description
+		WHERE Id = @id
+	END
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Specializations_INSERT')
+DROP TRIGGER Specializations_INSERT;
+
+GO
+
+CREATE TRIGGER Specializations_INSERT ON Specializations
+AFTER INSERT AS
+INSERT INTO SpecializationsChangeLog (SpecializationId, [Name], [Description], Operation)
+SELECT Id, [Name], [Description], 'INSERT'
+FROM INSERTED
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Specializations_UPDATE')
+DROP TRIGGER Specializations_UPDATE;
+
+GO
+
+CREATE TRIGGER Specializations_UPDATE ON Specializations
+AFTER UPDATE AS
+INSERT INTO SpecializationsChangeLog (SpecializationId, [Name], [Description], Operation)
+SELECT Id, [Name], [Description], 'UPDATE'
+FROM INSERTED</value>
+  </data>
+  <data name="20_AddOrUpdateDoctors" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateDoctors')
+DROP PROCEDURE AddOrUpdateDoctors
+GO
+CREATE PROCEDURE AddOrUpdateDoctors
+    @name nvarchar(50),
+	@surname nvarchar(300),
+	@specializationId int,
+    @id int = 0
+AS
+IF @id = 0
+	BEGIN
+		INSERT INTO Doctors([Name], [Surname], [SpecializationId])
+		VALUES(@name, @surname, @specializationId)
+
+		SET @id = scope_identity()
+		RETURN @id
+	END
+ELSE
+	BEGIN
+		UPDATE Doctors
+		SET
+		[Name] = @name,
+		[Surname] = @surname,
+		[SpecializationId] = @specializationId
+		WHERE Id = @id
+	END
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Doctors_INSERT')
+DROP TRIGGER Doctors_INSERT;
+
+GO
+
+CREATE TRIGGER Doctors_INSERT ON Doctors
+AFTER INSERT AS
+INSERT INTO DoctorsChangeLog (DoctorId, [Name], [Surname], [SpecializationId], Operation)
+SELECT Id, [Name], [Surname], [SpecializationId], 'INSERT'
+FROM INSERTED
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Doctors_UPDATE')
+DROP TRIGGER Doctors_UPDATE;
+
+GO
+
+CREATE TRIGGER Doctors_UPDATE ON Doctors
+AFTER UPDATE AS
+INSERT INTO DoctorsChangeLog (DoctorId, [Name], [Surname], [SpecializationId], Operation)
+SELECT Id, [Name], [Surname], [SpecializationId], 'UPDATE'
+FROM INSERTED</value>
+  </data>
+  <data name="21_AddOrUpdateAppointments" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'AddOrUpdateAppointments')
+DROP PROCEDURE AddOrUpdateAppointments
+GO
+CREATE PROCEDURE AddOrUpdateAppointments
+    @doctorId int,
+	@officeId int,
+	@startDate datetime,
+	@endDate datetime,
+	@patientName nvarchar(50),
+	@id int = 0
+AS
+IF @id = 0
+	BEGIN
+		INSERT INTO Appointments([DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName])
+		VALUES(@doctorId, @officeId, @startDate, @endDate, @patientName)
+
+		SET @id = scope_identity()
+		RETURN @id
+	END
+ELSE
+	BEGIN
+		UPDATE Appointments
+		SET
+		[DoctorId] = @doctorId,
+		[OfficeId] = @officeId,
+		[StartDate] = @startDate,
+		[EndDate] = @endDate,
+		[PatientName] = @patientName
+		WHERE Id = @id
+	END
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Appointments_INSERT')
+DROP TRIGGER Appointments_INSERT;
+
+GO
+
+CREATE TRIGGER Appointments_INSERT ON Appointments
+AFTER INSERT AS
+INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], Operation)
+SELECT Id, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], 'INSERT'
+FROM INSERTED
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Appointments_UPDATE')
+DROP TRIGGER Appointments_UPDATE;
+
+GO
+
+CREATE TRIGGER Appointments_UPDATE ON Appointments
+AFTER UPDATE AS
+INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], Operation)
+SELECT Id, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], 'UPDATE'
+FROM INSERTED</value>
+  </data>
+  <data name="22_DeleteOffices" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'DeleteOffices')
+DROP PROCEDURE DeleteOffices
+GO
+CREATE PROCEDURE DeleteOffices
+    @id int
+AS
+DELETE Offices
+WHERE Id = @id
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Offices_DELETE')
+DROP TRIGGER Offices_DELETE;
+
+GO
+
+CREATE TRIGGER Offices_DELETE ON Offices
+AFTER DELETE AS
+INSERT INTO OfficesChangeLog (OfficeId, Number, Operation)
+SELECT Id, Number, 'DELETE'
+FROM DELETED</value>
+  </data>
+  <data name="23_DeleteSpecializations" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'DeleteSpecializations')
+DROP PROCEDURE DeleteSpecializations
+GO
+CREATE PROCEDURE DeleteSpecializations
+    @id int
+AS
+DELETE Specializations
+WHERE Id = @id
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Specializations_DELETE')
+DROP TRIGGER Specializations_DELETE;
+
+GO
+
+CREATE TRIGGER Specializations_DELETE ON Specializations
+AFTER DELETE AS
+INSERT INTO SpecializationsChangeLog (SpecializationId, [Name], [Description], Operation)
+SELECT Id, [Name], [Description], 'DELETE'
+FROM DELETED</value>
+  </data>
+  <data name="24_DeleteDoctors" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'DeleteDoctors')
+DROP PROCEDURE DeleteDoctors
+GO
+CREATE PROCEDURE DeleteDoctors
+    @id int
+AS
+DELETE Doctors
+WHERE Id = @id
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Doctors_DELETE')
+DROP TRIGGER Doctors_DELETE;
+
+GO
+
+CREATE TRIGGER Doctors_DELETE ON Doctors
+AFTER DELETE AS
+INSERT INTO DoctorsChangeLog (DoctorId, [Name], [Surname], [SpecializationId], Operation)
+SELECT Id, [Name], [Surname], [SpecializationId], 'DELETE'
+FROM DELETED</value>
+  </data>
+  <data name="25_DeleteAppointments" xml:space="preserve">
+    <value>IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'DeleteAppointments')
+DROP PROCEDURE DeleteAppointments
+GO
+CREATE PROCEDURE DeleteAppointments
+    @id int
+AS
+DELETE Appointments
+WHERE Id = @id
+
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE [type] = 'TR' AND [name] = 'Appointments_DELETE')
+DROP TRIGGER Appointments_DELETE;
+
+GO
+
+CREATE TRIGGER Appointments_DELETE ON Appointments
+AFTER DELETE AS
+INSERT INTO AppointmentsChangeLog (AppointmentId, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], Operation)
+SELECT Id, [DoctorId], [OfficeId], [StartDate], [EndDate], [PatientName], 'DELETE'
+FROM DELETED</value>
+  </data>
+</root>
