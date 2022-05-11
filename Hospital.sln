@@ -5,21 +5,6 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.UnitTests", "Hospital.UnitTests\Hospital.UnitTests.csproj", "{5F704BDB-A614-4713-AE44-98201F08B226}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{622C16E5-7B16-4851-B8A3-584A0B0B07AD}"
-	ProjectSection(SolutionItems) = preProject
-		SolutionItems\10_DeleteDoctors.sql = SolutionItems\10_DeleteDoctors.sql
-		SolutionItems\11_DeleteAppointments.sql = SolutionItems\11_DeleteAppointments.sql
-		SolutionItems\1_CreateTables.sql = SolutionItems\1_CreateTables.sql
-		SolutionItems\2_AddOrUpdateOffices.sql = SolutionItems\2_AddOrUpdateOffices.sql
-		SolutionItems\3_AddOrUpdateIntervals.sql = SolutionItems\3_AddOrUpdateIntervals.sql
-		SolutionItems\4_AddOrUpdateSpecializations.sql = SolutionItems\4_AddOrUpdateSpecializations.sql
-		SolutionItems\5_AddOrUpdateDoctors.sql = SolutionItems\5_AddOrUpdateDoctors.sql
-		SolutionItems\6_AddOrUpdateAppointments.sql = SolutionItems\6_AddOrUpdateAppointments.sql
-		SolutionItems\7_DeleteOffices.sql = SolutionItems\7_DeleteOffices.sql
-		SolutionItems\8_DeleteIntervals.sql = SolutionItems\8_DeleteIntervals.sql
-		SolutionItems\9_DeleteSpecializations.sql = SolutionItems\9_DeleteSpecializations.sql
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastucture", "Infrastucture", "{6922932D-82BA-4C87-8F97-011826A88ACB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure\Infrastructure.csproj", "{061D6A40-D0DC-4540-866C-FF5D23DB8509}"
@@ -32,7 +17,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.BusinessLogic", "H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.DataAccess", "Hospital.Host\Hospital.DataAccess\Hospital.DataAccess.csproj", "{7023A4FB-86B9-4FA2-BB45-83817025CB41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.DatabaseInitialization", "Hospital.Host\Hospital.DatabaseInitialization\Hospital.DatabaseInitialization.csproj", "{994A3817-964D-43F0-BD81-EB2BB534C052}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.DatabaseInitialization", "Hospital.Host\Hospital.DatabaseInitialization\Hospital.DatabaseInitialization.csproj", "{994A3817-964D-43F0-BD81-EB2BB534C052}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagrams", "Diagrams", "{9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Class Diagram", "Class Diagram", "{D8A39BD8-868E-4BCE-9CD8-3CD9A567909C}"
+	ProjectSection(SolutionItems) = preProject
+		Diagrams\Class Diagram\Hospital.BusinessLogic.png = Diagrams\Class Diagram\Hospital.BusinessLogic.png
+		Diagrams\Class Diagram\Hospital.DataAccess.png = Diagrams\Class Diagram\Hospital.DataAccess.png
+		Diagrams\Class Diagram\Hospital.PresentationLogic.png = Diagrams\Class Diagram\Hospital.PresentationLogic.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Use Case Diagram", "Use Case Diagram", "{8D7FF10A-AD5F-47B6-9033-D49F70153BCA}"
+	ProjectSection(SolutionItems) = preProject
+		Diagrams\Use Case Diagram\Use Case Diagram.png = Diagrams\Use Case Diagram\Use Case Diagram.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database Diagram", "Database Diagram", "{17627EC3-8B9B-48EB-AF08-8E4CF4731282}"
+	ProjectSection(SolutionItems) = preProject
+		Diagrams\Database Diagram\Database Diagram.png = Diagrams\Database Diagram\Database Diagram.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +79,9 @@ Global
 		{CC0B6BF5-CA30-41F2-AA8C-968CEC0E9FA1} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
 		{7023A4FB-86B9-4FA2-BB45-83817025CB41} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
 		{994A3817-964D-43F0-BD81-EB2BB534C052} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
+		{D8A39BD8-868E-4BCE-9CD8-3CD9A567909C} = {9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}
+		{8D7FF10A-AD5F-47B6-9033-D49F70153BCA} = {9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}
+		{17627EC3-8B9B-48EB-AF08-8E4CF4731282} = {9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1AD2502-D55E-4296-ADFE-AF745162AB8A}
