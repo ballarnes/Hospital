@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hospital.DataAccess\Hospital.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Commands.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

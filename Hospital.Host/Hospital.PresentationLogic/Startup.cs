@@ -155,8 +155,6 @@ namespace Hospital.PresentationLogic
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllers();
             });
-
-            DbInitializer.FillTablesIfEmpty(Configuration, app);
         }
     }
 }

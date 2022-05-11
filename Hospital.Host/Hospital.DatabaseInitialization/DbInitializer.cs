@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Hospital.DataAccess.Models.Entities;
@@ -9,12 +9,29 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Dapper;
 using Microsoft.AspNetCore.Builder;
+using System.Collections;
+using Microsoft.SqlServer.Management.Smo;
+using Microsoft.SqlServer.Management.Common;
 
-namespace Hospital.DataAccess.Data
+namespace Hospital.DatabaseInitialization
 {
     public class DbInitializer
     {
-        private static IEnumerable<Office> GetPreconfiguredOffices()
+        private readonly string _connectionString;
+        private readonly ILogger _logger;
+        private readonly List<DictionaryEntry> _commands;
+
+        public DbInitializer(
+            string connectionString,
+            ILogger logger,
+            List<DictionaryEntry> commands)
+        {
+            _connectionString = connectionString;
+            _logger = logger;
+            _commands = commands;
+        }
+
+        private IEnumerable<Office> GetPreconfiguredOffices()
         {
             return new List<Office>()
             {
@@ -41,7 +58,7 @@ namespace Hospital.DataAccess.Data
             };
         }
 
-        private static IEnumerable<Specialization> GetPreconfiguredSpecializations()
+        private IEnumerable<Specialization> GetPreconfiguredSpecializations()
         {
             return new List<Specialization>()
             {
@@ -68,7 +85,7 @@ namespace Hospital.DataAccess.Data
             };
         }
 
-        private static IEnumerable<Doctor> GetPreconfiguredDoctors()
+        private IEnumerable<Doctor> GetPreconfiguredDoctors()
         {
             return new List<Doctor>()
             {
@@ -105,9 +122,24 @@ namespace Hospital.DataAccess.Data
             };
         }
 
-        public static async void FillTablesIfEmpty(IConfiguration configuration, IApplicationBuilder host)
+        public void InitializeDatabase()
         {
-            using (var connection = new SqlConnection(configuration["ConnectionString"]))
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                foreach (var command in _commands)
+                {
+                    ExecuteCommand(command, connection);
+                }
+
+                connection.Close();
+            }
+        }
+
+        public void FillTablesIfEmpty()
+        {
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
@@ -132,7 +164,7 @@ namespace Hospital.DataAccess.Data
 
                         command.Parameters.Add(numberParam);
 
-                        await AddObject(command, nameof(Office), host);
+                        AddObject(command, nameof(Office));
 
                         command.Parameters.Clear();
                     }
@@ -162,7 +194,7 @@ namespace Hospital.DataAccess.Data
                         command.Parameters.Add(nameParam);
                         command.Parameters.Add(descriptionParam);
 
-                        await AddObject(command, nameof(Specialization), host);
+                        AddObject(command, nameof(Specialization));
 
                         command.Parameters.Clear();
                     }
@@ -200,7 +232,7 @@ namespace Hospital.DataAccess.Data
                         command.Parameters.Add(surnameParam);
                         command.Parameters.Add(specizalizationIdParam);
 
-                        await AddObject(command, nameof(Doctor), host);
+                        AddObject(command, nameof(Doctor));
 
                         command.Parameters.Clear();
                     }
@@ -210,11 +242,8 @@ namespace Hospital.DataAccess.Data
             }
         }
 
-        private static async Task AddObject(SqlCommand command, string objectName, IApplicationBuilder host)
+        private void AddObject(SqlCommand command, string objectName)
         {
-            var services = host.ApplicationServices.CreateScope().ServiceProvider;
-            var logger = services.GetRequiredService<ILogger<DbInitializer>>();
-
             try
             {
                 var returnParam = new SqlParameter
@@ -226,12 +255,36 @@ namespace Hospital.DataAccess.Data
 
                 command.Parameters.Add(returnParam);
 
-                await command.ExecuteNonQueryAsync();
-                logger.LogInformation($"Created new {objectName} with ID: [{returnParam.Value}]");
+                command.ExecuteNonQuery();
+
+                _logger.LogInformation($"Created new {objectName} with ID: [{returnParam.Value}]");
             }
             catch (SqlException ex)
             {
-                logger.LogError(ex, "An error occurred updating the table.");
+                _logger.LogError(ex, "An error occurred updating the table.");
+            }
+        }
+
+        private void ExecuteCommand(DictionaryEntry entry, SqlConnection connection)
+        {
+            try
+            {
+                var server = new Server(new ServerConnection(connection));
+
+                server.ConnectionContext.ExecuteNonQuery(entry.Value.ToString());
+
+                _logger.LogInformation($"Executed [{entry.Key}] command.");
+            }
+            catch (ExecutionFailureException ex)
+            {
+                if (ex.HResult == -2146233087)
+                {
+                    _logger.LogWarning($"[{entry.Key}]: {ex.InnerException.Message}");
+                }
+                else
+                {
+                    _logger.LogError(ex.ToString(), $"An error occurred executing [{entry.Key}] command.");
+                }
             }
         }
     }

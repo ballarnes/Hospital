@@ -5,13 +5,12 @@ using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.Configuration;
 using System.Resources.NetStandard;
+using System.Collections.Generic;
 
 namespace Hospital.DatabaseInitialization
 {
     internal class Program
     {
-        private const int _hrResult = -2146233087;
-
         static void Main(string[] args)
         {
             using var loggerFactory = LoggerFactory.Create(builder =>
@@ -23,43 +22,22 @@ namespace Hospital.DatabaseInitialization
                     .AddConsole();
             });
 
-            var logger = loggerFactory.CreateLogger<Program>();
+            var logger = loggerFactory.CreateLogger<DbInitializer>();
+            var commands = new List<DictionaryEntry>();
+            var connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
             using (var resxReader = new ResXResourceReader("Commands.resx"))
             {
-                using (var connection = new SqlConnection(ConfigurationManager.AppSettings.Get("ConnectionString")))
+                foreach (DictionaryEntry entry in resxReader)
                 {
-                    connection.Open();
-                    foreach (DictionaryEntry entry in resxReader)
-                    {
-                        Execute(logger, entry, connection);
-                    }
-                    connection.Close();
+                    commands.Add(entry);
                 }
             }
-        }
 
-        static void Execute(ILogger logger, DictionaryEntry entry, SqlConnection connection)
-        {
-            try
-            {
-                var server = new Server(new ServerConnection(connection));
+            var dbInitializer = new DbInitializer(connectionString, logger, commands);
 
-                server.ConnectionContext.ExecuteNonQuery(entry.Value.ToString());
-
-                logger.LogInformation($"Executed [{entry.Key}] command.");
-            }
-            catch (ExecutionFailureException ex)
-            {
-                if (ex.HResult == _hrResult)
-                {
-                    logger.LogInformation($"[{entry.Key}]: {ex.InnerException.Message}");
-                }
-                else
-                {
-                    logger.LogError(ex.ToString(), $"An error occurred executing [{entry.Key}] command.");
-                }
-            }
+            dbInitializer.InitializeDatabase();
+            dbInitializer.FillTablesIfEmpty();
         }
     }
 }

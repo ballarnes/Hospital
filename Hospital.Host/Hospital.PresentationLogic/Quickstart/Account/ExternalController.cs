@@ -46,7 +46,9 @@ namespace Host.Quickstart.Account
         /// initiate roundtrip to external authentication provider
         /// </summary>
         [HttpGet]
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IActionResult> Challenge(string provider, string returnUrl)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
 
