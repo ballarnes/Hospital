@@ -9,6 +9,7 @@ using Hospital.DataAccess.Repositories.Interfaces;
 using Infrastructure.Connection.Interfaces;
 using Dapper;
 using Hospital.DataAccess.Models.Entities;
+using Hospital.DataAccess.Infrastructure;
 
 namespace Hospital.DataAccess.Repositories
 {
@@ -95,61 +96,28 @@ namespace Hospital.DataAccess.Repositories
 
         public async Task<int?> AddOffice(int number)
         {
-            var command = new SqlCommand("AddOrUpdateOffices");
-            command.CommandType = CommandType.StoredProcedure;
-            command.Connection = (SqlConnection)_connection.Connection;
+            var parameters = new DynamicParameters();
+            parameters.Add("@number", number, DbType.Int32);
+            parameters.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
-            var numberParam = new SqlParameter
-            {
-                ParameterName = "@number",
-                SqlDbType = SqlDbType.Int,
-                Value = number
-            };
+            await _connection.Connection.ExecuteAsync("AddOrUpdateOffices", parameters, commandType: CommandType.StoredProcedure);
 
-            var returnParam = new SqlParameter
-            {
-                ParameterName = "@id",
-                SqlDbType = SqlDbType.Int,
-                Direction = ParameterDirection.ReturnValue
-            };
+            var result = parameters.Get<int>("@id");
 
-            command.Parameters.Add(numberParam);
-            command.Parameters.Add(returnParam);
-
-            await command.ExecuteNonQueryAsync();
-
-            if (returnParam.Value == null)
+            if (result == default)
             {
                 return null;
             }
 
-            return (int)returnParam.Value;
+            return result;
         }
 
-        public async Task<int?> UpdateOffice(int id, int number)
+        public async Task<int?> UpdateOffice(Office office)
         {
-            var command = new SqlCommand("AddOrUpdateOffices");
-            command.CommandType = CommandType.StoredProcedure;
-            command.Connection = (SqlConnection)_connection.Connection;
-
-            var idParam = new SqlParameter
-            {
-                ParameterName = "@id",
-                SqlDbType = SqlDbType.Int,
-                Value = id
-            };
-
-            var numberParam = new SqlParameter
-            {
-                ParameterName = "@number",
-                SqlDbType = SqlDbType.Int,
-                Value = number
-            };
-
-            command.Parameters.Add(idParam);
-            command.Parameters.Add(numberParam);
-
-            var result = await command.ExecuteNonQueryAsync();
+            var result = await _connection.Connection.ExecuteAsync(
+                "AddOrUpdateOffices",
+                StoredProcedureManager.GetParameters(office),
+                commandType: CommandType.StoredProcedure);
 
             if (result == default)
             {
@@ -161,20 +129,10 @@ namespace Hospital.DataAccess.Repositories
 
         public async Task<int?> DeleteOffice(int id)
         {
-            var command = new SqlCommand("DeleteOffices");
-            command.CommandType = CommandType.StoredProcedure;
-            command.Connection = (SqlConnection)_connection.Connection;
+            var parameters = new DynamicParameters();
+            parameters.Add("@id", id, DbType.Int32);
 
-            var idParam = new SqlParameter
-            {
-                ParameterName = "@id",
-                SqlDbType = SqlDbType.Int,
-                Value = id
-            };
-
-            command.Parameters.Add(idParam);
-
-            var result = await command.ExecuteNonQueryAsync();
+            var result = await _connection.Connection.ExecuteAsync("DeleteOffices", parameters, commandType: CommandType.StoredProcedure);
 
             if (result == default)
             {

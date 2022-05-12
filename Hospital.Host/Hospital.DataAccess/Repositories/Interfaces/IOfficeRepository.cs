@@ -12,7 +12,7 @@ namespace Hospital.DataAccess.Repositories.Interfaces
         Task<Office> GetOfficeById(int id);
         Task<List<Office>> GetFreeOfficesByDate(DateTime date);
         Task<int?> AddOffice(int number);
-        Task<int?> UpdateOffice(int id, int number);
+        Task<int?> UpdateOffice(Office office);
         Task<int?> DeleteOffice(int id);
     }
 }

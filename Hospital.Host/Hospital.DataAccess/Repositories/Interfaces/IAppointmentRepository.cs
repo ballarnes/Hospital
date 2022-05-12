@@ -13,7 +13,7 @@ namespace Hospital.DataAccess.Repositories.Interfaces
         Task<List<Appointment>> GetAppointmentsByDoctorDate(int doctorId, DateTime date);
         Task<Appointment> GetAppointmentById(int id);
         Task<int?> AddAppointment(int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName);
-        Task<int?> UpdateAppointment(int id, int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName);
+        Task<int?> UpdateAppointment(Appointment appointment);
         Task<int?> DeleteAppointment(int id);
     }
 }

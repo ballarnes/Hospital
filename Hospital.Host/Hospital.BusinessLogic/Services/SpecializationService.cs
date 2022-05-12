@@ -7,6 +7,7 @@ using Hospital.DataAccess.Repositories.Interfaces;
 using Infrastructure.Connection.Interfaces;
 using AutoMapper;
 using Hospital.DataAccess.Models.Dtos;
+using Hospital.DataAccess.Models.Entities;
 
 namespace Hospital.BusinessLogic.Services
 {
@@ -76,11 +77,11 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
-        public async Task<int?> UpdateSpecialization(int id, string name, string description)
+        public async Task<int?> UpdateSpecialization(SpecializationDto specializationDto)
         {
             return await ExecuteSafe(async () =>
             {
-                var result = await _specializationRepository.UpdateSpecialization(id, name, description);
+                var result = await _specializationRepository.UpdateSpecialization(_mapper.Map<Specialization>(specializationDto));
 
                 if (result == default)
                 {

@@ -8,6 +8,7 @@ using Hospital.DataAccess.Repositories.Interfaces;
 using Infrastructure.Connection.Interfaces;
 using Dapper;
 using Hospital.DataAccess.Models.Entities;
+using Hospital.DataAccess.Infrastructure;
 
 namespace Hospital.DataAccess.Repositories
 {
@@ -107,93 +108,30 @@ namespace Hospital.DataAccess.Repositories
 
         public async Task<int?> AddDoctor(string name, string surname, int specializationId)
         {
-            var command = new SqlCommand("AddOrUpdateDoctors");
-            command.CommandType = CommandType.StoredProcedure;
-            command.Connection = (SqlConnection)_connection.Connection;
+            var parameters = new DynamicParameters();
+            parameters.Add("@name", name, DbType.String);
+            parameters.Add("@surname", surname, DbType.String);
+            parameters.Add("@specializationId", specializationId, DbType.Int32);
+            parameters.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
-            var nameParam = new SqlParameter
-            {
-                ParameterName = "@name",
-                SqlDbType = SqlDbType.NVarChar,
-                Value = name
-            };
+            await _connection.Connection.ExecuteAsync("AddOrUpdateDoctors", parameters, commandType: CommandType.StoredProcedure);
 
-            var surnameParam = new SqlParameter
-            {
-                ParameterName = "@surname",
-                SqlDbType = SqlDbType.NVarChar,
-                Value = surname
-            };
+            var result = parameters.Get<int>("@id");
 
-            var specizalizationIdParam = new SqlParameter
-            {
-                ParameterName = "@specializationId",
-                SqlDbType = SqlDbType.Int,
-                Value = specializationId
-            };
-
-            var returnParam = new SqlParameter
-            {
-                ParameterName = "@id",
-                SqlDbType = SqlDbType.Int,
-                Direction = ParameterDirection.ReturnValue
-            };
-
-            command.Parameters.Add(nameParam);
-            command.Parameters.Add(surnameParam);
-            command.Parameters.Add(specizalizationIdParam);
-            command.Parameters.Add(returnParam);
-
-            await command.ExecuteNonQueryAsync();
-
-            if (returnParam.Value == null)
+            if (result == default)
             {
                 return null;
             }
 
-            return (int)returnParam.Value;
+            return result;
         }
 
-        public async Task<int?> UpdateDoctor(int id, string name, string surname, int specializationId)
+        public async Task<int?> UpdateDoctor(Doctor doctor)
         {
-            var command = new SqlCommand("AddOrUpdateDoctors");
-            command.CommandType = CommandType.StoredProcedure;
-            command.Connection = (SqlConnection)_connection.Connection;
-
-            var idParam = new SqlParameter
-            {
-                ParameterName = "@id",
-                SqlDbType = SqlDbType.Int,
-                Value = id
-            };
-
-            var nameParam = new SqlParameter
-            {
-                ParameterName = "@name",
-                SqlDbType = SqlDbType.NVarChar,
-                Value = name
-            };
-
-            var surnameParam = new SqlParameter
-            {
-                ParameterName = "@surname",
-                SqlDbType = SqlDbType.NVarChar,
-                Value = surname
-            };
-
-            var specizalizationIdParam = new SqlParameter
-            {
-                ParameterName = "@specializationId",
-                SqlDbType = SqlDbType.Int,
-                Value = specializationId
-            };
-
-            command.Parameters.Add(idParam);
-            command.Parameters.Add(nameParam);
-            command.Parameters.Add(surnameParam);
-            command.Parameters.Add(specizalizationIdParam);
-
-            var result = await command.ExecuteNonQueryAsync();
+            var result = await _connection.Connection.ExecuteAsync(
+                "AddOrUpdateDoctors",
+                StoredProcedureManager.GetParameters(doctor),
+                commandType: CommandType.StoredProcedure);
 
             if (result == default)
             {
@@ -205,20 +143,10 @@ namespace Hospital.DataAccess.Repositories
 
         public async Task<int?> DeleteDoctor(int id)
         {
-            var command = new SqlCommand("DeleteDoctors");
-            command.CommandType = CommandType.StoredProcedure;
-            command.Connection = (SqlConnection)_connection.Connection;
+            var parameters = new DynamicParameters();
+            parameters.Add("@id", id, DbType.Int32);
 
-            var idParam = new SqlParameter
-            {
-                ParameterName = "@id",
-                SqlDbType = SqlDbType.Int,
-                Value = id
-            };
-
-            command.Parameters.Add(idParam);
-
-            var result = await command.ExecuteNonQueryAsync();
+            var result = await _connection.Connection.ExecuteAsync("DeleteDoctors", parameters, commandType: CommandType.StoredProcedure);
 
             if (result == default)
             {

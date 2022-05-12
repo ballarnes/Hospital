@@ -8,6 +8,7 @@ using Infrastructure.Connection.Interfaces;
 using AutoMapper;
 using Hospital.DataAccess.Models.Dtos;
 using System.Linq;
+using Hospital.DataAccess.Models.Entities;
 
 namespace Hospital.BusinessLogic.Services
 {
@@ -118,11 +119,11 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
-        public async Task<int?> UpdateAppointment(int id, int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName)
+        public async Task<int?> UpdateAppointment(AppointmentDto appointmentDto)
         {
             return await ExecuteSafe(async () =>
             {
-                var result = await _appointmentRepository.UpdateAppointment(id, doctorId, officeId, startDate, endDate, patientName);
+                var result = await _appointmentRepository.UpdateAppointment(_mapper.Map<Appointment>(appointmentDto));
 
                 if (result == default)
                 {

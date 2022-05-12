@@ -8,6 +8,7 @@ using Hospital.DataAccess.Repositories.Interfaces;
 using Infrastructure.Connection.Interfaces;
 using AutoMapper;
 using Hospital.DataAccess.Models.Dtos;
+using Hospital.DataAccess.Models.Entities;
 
 namespace Hospital.BusinessLogic.Services
 {
@@ -102,11 +103,11 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
-        public async Task<int?> UpdateOffice(int id, int number)
+        public async Task<int?> UpdateOffice(OfficeDto officeDto)
         {
             return await ExecuteSafe(async () =>
             {
-                var result = await _officeRepository.UpdateOffice(id, number);
+                var result = await _officeRepository.UpdateOffice(_mapper.Map<Office>(officeDto));
 
                 if (result == default)
                 {

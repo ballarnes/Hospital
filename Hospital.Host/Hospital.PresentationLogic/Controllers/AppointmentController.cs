@@ -1,4 +1,5 @@
 ﻿using Hospital.BusinessLogic.Services.Interfaces;
+using Hospital.DataAccess.Models.Dtos;
 using Hospital.PresentationLogic.Models.Requests;
 using Hospital.PresentationLogic.Models.Responses;
 using Infrastructure.Identity;
@@ -41,9 +42,9 @@ namespace Hospital.PresentationLogic.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateAppointment(UpdateAppointmentRequest request)
+        public async Task<IActionResult> UpdateAppointment(AppointmentDto request)
         {
-            var result = await _appointmentService.UpdateAppointment(request.Id, request.DoctorId, request.OfficeId, request.StartDate, request.EndDate, request.PatientName);
+            var result = await _appointmentService.UpdateAppointment(request);
 
             if (result == null)
             {

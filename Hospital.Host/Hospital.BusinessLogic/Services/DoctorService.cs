@@ -7,6 +7,7 @@ using Hospital.DataAccess.Repositories.Interfaces;
 using Infrastructure.Connection.Interfaces;
 using AutoMapper;
 using Hospital.DataAccess.Models.Dtos;
+using Hospital.DataAccess.Models.Entities;
 
 namespace Hospital.BusinessLogic.Services
 {
@@ -98,11 +99,11 @@ namespace Hospital.BusinessLogic.Services
             });
         }
 
-        public async Task<int?> UpdateDoctor(int id, string name, string surname, int specializationId)
+        public async Task<int?> UpdateDoctor(DoctorDto doctorDto)
         {
             return await ExecuteSafe(async () =>
             {
-                var result = await _doctorRepository.UpdateDoctor(id, name, surname, specializationId);
+                var result = await _doctorRepository.UpdateDoctor(_mapper.Map<Doctor>(doctorDto));
 
                 if (result == default)
                 {

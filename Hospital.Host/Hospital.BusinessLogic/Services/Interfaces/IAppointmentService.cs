@@ -12,7 +12,7 @@ namespace Hospital.BusinessLogic.Services.Interfaces
         Task<ArrayResponse<AppointmentDto>> GetAppointmentsByDoctorDate(int doctorId, DateTime date);
         Task<AppointmentDto> GetAppointmentById(int id);
         Task<IdResponse<int>> AddAppointment(int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName);
-        Task<int?> UpdateAppointment(int id, int doctorId, int officeId, DateTime startDate, DateTime endDate, string patientName);
+        Task<int?> UpdateAppointment(AppointmentDto appointmentDto);
         Task<int?> DeleteAppointment(int id);
     }
 }

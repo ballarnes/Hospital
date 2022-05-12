@@ -10,7 +10,7 @@ namespace Hospital.BusinessLogic.Services.Interfaces
         Task<DoctorDto> GetDoctorById(int id);
         Task<PaginatedItemsResponse<DoctorDto>> GetDoctorsBySpecializationId(int id);
         Task<IdResponse<int>> AddDoctor(string name, string surname, int specializationId);
-        Task<int?> UpdateDoctor(int id, string name, string surname, int specializationId);
+        Task<int?> UpdateDoctor(DoctorDto doctorDto);
         Task<int?> DeleteDoctor(int id);
     }
 }

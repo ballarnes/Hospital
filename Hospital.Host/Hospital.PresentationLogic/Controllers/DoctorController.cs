@@ -6,6 +6,7 @@ using Hospital.BusinessLogic.Services.Interfaces;
 using Hospital.PresentationLogic.Models.Requests;
 using Hospital.PresentationLogic.Models.Responses;
 using Infrastructure.Identity;
+using Hospital.DataAccess.Models.Dtos;
 
 namespace Hospital.PresentationLogic.Controllers
 {
@@ -41,9 +42,9 @@ namespace Hospital.PresentationLogic.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateDoctor(UpdateDoctorRequest request)
+        public async Task<IActionResult> UpdateDoctor(DoctorDto request)
         {
-            var result = await _doctorService.UpdateDoctor(request.Id, request.Name, request.Surname, request.SpecializationId);
+            var result = await _doctorService.UpdateDoctor(request);
 
             if (result == null)
             {

@@ -11,7 +11,7 @@ namespace Hospital.BusinessLogic.Services.Interfaces
         Task<OfficeDto> GetOfficeById(int id);
         Task<ArrayResponse<OfficeDto>> GetFreeOfficesByDate(DateTime date);
         Task<IdResponse<int>> AddOffice(int number);
-        Task<int?> UpdateOffice(int id, int number);
+        Task<int?> UpdateOffice(OfficeDto officeDto);
         Task<int?> DeleteOffice(int id);
     }
 }
