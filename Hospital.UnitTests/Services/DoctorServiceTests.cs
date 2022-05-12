@@ -286,16 +286,21 @@ namespace Hospital.UnitTests.Services
         public async Task UpdateDoctor_Success()
         {
             // arrange
+            var doctorDtoSuccess = new DoctorDto()
+            {
+                Id = _testDoctor.Id,
+                Name = _testDoctor.Name,
+                Surname = _testDoctor.Surname,
+                SpecializationId = _testDoctor.SpecializationId
+            };
+
             var testResult = 1;
 
             _doctorRepository.Setup(s => s.UpdateDoctor(
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>())).ReturnsAsync(testResult);
+                It.IsAny<Doctor>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _doctorService.UpdateDoctor(_testDoctor.Id, _testDoctor.Name, _testDoctor.Surname, _testDoctor.SpecializationId);
+            var result = await _doctorService.UpdateDoctor(doctorDtoSuccess);
 
             // assert
             result.Should().Be(testResult);
@@ -305,16 +310,21 @@ namespace Hospital.UnitTests.Services
         public async Task UpdateDoctor_Failed()
         {
             // arrange
+            var doctorDtoFailed = new DoctorDto()
+            {
+                Id = int.MinValue,
+                Name = string.Empty,
+                Surname = string.Empty,
+                SpecializationId = int.MinValue
+            };
+
             int? testResult = null;
 
             _doctorRepository.Setup(s => s.UpdateDoctor(
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>())).ReturnsAsync(testResult);
+                It.IsAny<Doctor>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _doctorService.UpdateDoctor(_testDoctor.Id, _testDoctor.Name, _testDoctor.Surname, _testDoctor.SpecializationId);
+            var result = await _doctorService.UpdateDoctor(doctorDtoFailed);
 
             // assert
             result.Should().Be(testResult);

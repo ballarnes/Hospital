@@ -388,18 +388,23 @@ namespace Hospital.UnitTests.Services
         public async Task UpdateAppointment_Success()
         {
             // arrange
+            var appointmentDtoSuccess = new AppointmentDto()
+            {
+                Id = _testAppointment.Id,
+                DoctorId = _testAppointment.DoctorId,
+                OfficeId = _testAppointment.OfficeId,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
+                PatientName = _testAppointment.PatientName
+            };
+
             var testResult = 1;
 
             _appointmentRepository.Setup(s => s.UpdateAppointment(
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<string>())).ReturnsAsync(testResult);
+                It.IsAny<Appointment>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _appointmentService.UpdateAppointment(_testAppointment.Id, _testAppointment.DoctorId, _testAppointment.OfficeId, _testAppointment.StartDate, _testAppointment.EndDate, _testAppointment.PatientName);
+            var result = await _appointmentService.UpdateAppointment(appointmentDtoSuccess);
 
             // assert
             result.Should().Be(testResult);
@@ -409,18 +414,23 @@ namespace Hospital.UnitTests.Services
         public async Task UpdateAppointment_Failed()
         {
             // arrange
+            var appointmentDtoFailed = new AppointmentDto()
+            {
+                Id = int.MinValue,
+                DoctorId = int.MinValue,
+                OfficeId = int.MinValue,
+                StartDate = DateTime.MinValue,
+                EndDate = DateTime.MinValue,
+                PatientName = string.Empty
+            };
+
             int? testResult = null;
 
             _appointmentRepository.Setup(s => s.UpdateAppointment(
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<string>())).ReturnsAsync(testResult);
+                It.IsAny<Appointment>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _appointmentService.UpdateAppointment(_testAppointment.Id, _testAppointment.DoctorId, _testAppointment.OfficeId, _testAppointment.StartDate, _testAppointment.EndDate, _testAppointment.PatientName);
+            var result = await _appointmentService.UpdateAppointment(appointmentDtoFailed);
 
             // assert
             result.Should().Be(testResult);

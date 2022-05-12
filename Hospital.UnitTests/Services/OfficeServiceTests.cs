@@ -260,14 +260,19 @@ namespace Hospital.UnitTests.Services
         public async Task UpdateOffice_Success()
         {
             // arrange
+            var officeDtoSuccess = new OfficeDto()
+            {
+                Id = _testOffice.Id,
+                Number = _testOffice.Number
+            };
+
             var testResult = 1;
 
             _officeRepository.Setup(s => s.UpdateOffice(
-                It.IsAny<int>(),
-                It.IsAny<int>())).ReturnsAsync(testResult);
+                It.IsAny<Office>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _officeService.UpdateOffice(_testOffice.Id, _testOffice.Number);
+            var result = await _officeService.UpdateOffice(officeDtoSuccess);
 
             // assert
             result.Should().Be(testResult);
@@ -277,14 +282,19 @@ namespace Hospital.UnitTests.Services
         public async Task UpdateOffice_Failed()
         {
             // arrange
+            var officeDtoFailed = new OfficeDto()
+            {
+                Id = int.MinValue,
+                Number = int.MinValue
+            };
+
             int? testResult = null;
 
             _officeRepository.Setup(s => s.UpdateOffice(
-                It.IsAny<int>(),
-                It.IsAny<int>())).ReturnsAsync(testResult);
+                It.IsAny<Office>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _officeService.UpdateOffice(_testOffice.Id, _testOffice.Number);
+            var result = await _officeService.UpdateOffice(officeDtoFailed);
 
             // assert
             result.Should().Be(testResult);
