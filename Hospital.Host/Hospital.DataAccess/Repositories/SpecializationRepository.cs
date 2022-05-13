@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Hospital.DataAccess.Data;
 using Hospital.DataAccess.Repositories.Interfaces;
@@ -10,17 +9,21 @@ using Dapper;
 using Hospital.DataAccess.Models.Entities;
 using Hospital.DataAccess.Models.Dtos;
 using Hospital.DataAccess.Infrastructure;
+using Hospital.DataAccess.Infrastructure.Interfaces;
 
 namespace Hospital.DataAccess.Repositories
 {
     public class SpecializationRepository : ISpecializationRepository
     {
         private readonly IDbConnectionWrapper _connection;
+        private readonly IStoredProcedureManager _storedProcedureManager;
 
         public SpecializationRepository(
-            IDbConnectionWrapper connection)
+            IDbConnectionWrapper connection,
+            IStoredProcedureManager storedProcedureManager)
         {
             _connection = connection;
+            _storedProcedureManager = storedProcedureManager;
         }
 
         public async Task<PaginatedItems<Specialization>> GetSpecializations(int pageIndex, int pageSize)
@@ -82,7 +85,7 @@ namespace Hospital.DataAccess.Repositories
         {
             var result = await _connection.Connection.ExecuteAsync(
                 "AddOrUpdateSpecializations",
-                StoredProcedureManager.GetParameters(specialization),
+                _storedProcedureManager.GetParameters(specialization),
                 commandType: CommandType.StoredProcedure);
 
             if (result == default)

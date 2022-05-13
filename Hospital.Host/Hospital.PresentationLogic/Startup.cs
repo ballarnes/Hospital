@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Hospital.BusinessLogic.Services;
 using Hospital.BusinessLogic.Services.Interfaces;
-using Hospital.DataAccess.Data;
 using Hospital.DataAccess.Repositories;
 using Hospital.DataAccess.Repositories.Interfaces;
 using Infrastructure.Connection;
@@ -18,6 +17,8 @@ using Infrastructure.Filters;
 using Hospital.PresentationLogic.Configurations;
 using Hospital.PresentationLogic.Quickstart.UI;
 using IdentityServer4;
+using Hospital.DataAccess.Infrastructure.Interfaces;
+using Hospital.DataAccess.Infrastructure;
 
 namespace Hospital.PresentationLogic
 {
@@ -107,6 +108,8 @@ namespace Hospital.PresentationLogic
 
             services.AddTransient<IAppointmentRepository, AppointmentRepository>();
             services.AddTransient<IAppointmentService, AppointmentService>();
+
+            services.AddSingleton<IStoredProcedureManager, StoredProcedureManager>();
 
             services.AddScoped<IDbConnectionWrapper, DbConnectionWrapper>(provider => new DbConnectionWrapper(Configuration["ConnectionString"]));
 

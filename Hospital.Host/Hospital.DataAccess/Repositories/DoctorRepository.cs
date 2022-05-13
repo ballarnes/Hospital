@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Hospital.DataAccess.Data;
 using Hospital.DataAccess.Repositories.Interfaces;
@@ -9,17 +8,21 @@ using Infrastructure.Connection.Interfaces;
 using Dapper;
 using Hospital.DataAccess.Models.Entities;
 using Hospital.DataAccess.Infrastructure;
+using Hospital.DataAccess.Infrastructure.Interfaces;
 
 namespace Hospital.DataAccess.Repositories
 {
     public class DoctorRepository : IDoctorRepository
     {
         private readonly IDbConnectionWrapper _connection;
+        private readonly IStoredProcedureManager _storedProcedureManager;
 
         public DoctorRepository(
-            IDbConnectionWrapper connection)
+            IDbConnectionWrapper connection,
+            IStoredProcedureManager storedProcedureManager)
         {
             _connection = connection;
+            _storedProcedureManager = storedProcedureManager;
         }
 
         public async Task<PaginatedItems<Doctor>> GetDoctors(int pageIndex, int pageSize)
@@ -130,7 +133,7 @@ namespace Hospital.DataAccess.Repositories
         {
             var result = await _connection.Connection.ExecuteAsync(
                 "AddOrUpdateDoctors",
-                StoredProcedureManager.GetParameters(doctor),
+                _storedProcedureManager.GetParameters(doctor),
                 commandType: CommandType.StoredProcedure);
 
             if (result == default)
