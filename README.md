@@ -6,11 +6,9 @@
 > Microsoft SQL Server and Visual Studio must be installed!
 
 1. Create database named **"Hospital"**.
-2. Open **"SolutionItems"** folder.
-3. Run all numbered files one by one.
-4. Open **"Hospital.sln"**.
-5. Select **"Hospital.Host"** and **"IdentityServer"** in Startup project properties.
-6. Start debug mode.
+2. Open **"Hospital.sln"**.
+3. Start **"Hospital.DatabaseInitialization"** project and wait until the tables and stored procedures will be created.
+4. Start **"Hospital.PresentationLogic"** project.
 
 
 ## How to run UI
@@ -28,4 +26,4 @@
 >
 > Website link: http://localhost:5001
 > Swagger link: http://localhost:5000/swagger/index.html
-> Identity Server link: http://localhost:5002
+> Identity Server link: http://localhost:5000

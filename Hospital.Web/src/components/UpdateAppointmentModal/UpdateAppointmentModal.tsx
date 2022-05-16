@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import { Appointment } from '../../models/Appointment';
 import { useAuth } from 'react-oidc-context';
 import UserProfilePageStore from '../../stores/pages/UserProfilePageStore';
+import { setMinutes, setHours, addDays } from "date-fns";
 
 interface Props {
   show: boolean,
@@ -65,44 +66,41 @@ const UpdateAppointmentModal = observer((props: Props) => {
               <p>{t('appointment.specialization')}: <strong>{store.appointment.doctor.specialization.name}</strong></p>
             <Form.Group className="mb-3">
               {store.saved ? (
-                  <p>{t('appointment.date')}: <strong>{new Date(store.appointment.date).toLocaleDateString()}</strong></p>
+                  <p>{t('appointment.date')}: <strong>{new Date(store.appointment.startDate).toLocaleDateString()}</strong></p>
                 ) : (
                 <>
                 <Form.Label>{t('personalArea.updateModal.date')}</Form.Label>
                 <Row className="justify-content-start text-start">
                   <Col>
-                    <DatePicker
-                      locale={appointmentStore.getLocale(i18n.language)}
-                      dateFormat={appointmentStore.getDateFormat(i18n.language)}
-                      selected={new Date(store.newDate)}
-                      onChange={(date: Date) => store.changeDate(date)}
-                      minDate={new Date()}
-                      maxDate={appointmentStore.addDays(new Date(), 14)}
-                      filterDate={isWeekday}
-                      className="mb-3 text-start form-control"
-                      withPortal
-                    />
+                  <DatePicker
+                    locale={appointmentStore.getLocale(i18n.language)}
+                    dateFormat={appointmentStore.getDateFormat(i18n.language)}
+                    selected={new Date(store.newDate)}
+                    showTimeSelect
+                    onChange={(date: Date) => store.changeDate(date)}
+                    minDate={new Date().getHours() > 18 ? (addDays(new Date(), 1)) : (new Date())}
+                    maxDate={addDays(new Date(), 14)}
+                    minTime={new Date(store.newDate).getDate() == new Date().getDate() ? (new Date()) : (setHours(setMinutes(store.newDate, 0), 9))}
+                    maxTime={setHours(setMinutes(store.newDate, 30), 18)}
+                    filterDate={isWeekday}
+                    excludeTimes={store.excludedTimes}
+                    className="mb-3 text-center form-control"
+                    withPortal
+                  />
                   </Col>
                 </Row>
                 </>
+              )}
+              {store.officeError && (
+                  <p style={{ color: 'red', fontSize: 14 }}>{t("error.sorry")},{t("error.noOffices")} {t("error.tryToChangeTheInterval")}</p>
               )}
             </Form.Group>
             <Form.Group
               className="mb-3"
             >
-              {store.saved ? (
-                <p>{t('appointment.time')}: <strong>{store.appointment.interval.start} - {store.appointment.interval.end}</strong></p>
-              ) : (
-              <>
-                <Form.Label>{t("personalArea.updateModal.interval")}</Form.Label>
-                <Form.Select className="mb-3" aria-label={t("selectInterval")} onChange={(ev) => store.changeInterval(ev.target.value)}>
-                  <option disabled value='0'>{t("selectInterval")}</option>
-                  {store.intervals?.map((interval, key) => (
-                    <option key={key} value={interval.id}>{interval.start} - {interval.end}</option>
-                  ))}
-                </Form.Select>
-              </>
-              )}
+              {store.saved && (
+                <p>{t('appointment.time')}: <strong>{new Date(store.appointment.startDate).toLocaleTimeString()} - {new Date(store.appointment.endDate).toLocaleTimeString()}</strong></p>
+                )}
               
             </Form.Group>
           </Form>
@@ -124,7 +122,7 @@ const UpdateAppointmentModal = observer((props: Props) => {
             </Button>
           )}
           {!store.isLoading && !store.saved && !store.delete && (
-            <Button variant="success" onClick={store.updateAppointment}>
+            <Button variant="success" onClick={store.getFreeOffices}>
               {t("personalArea.updateModal.save")}
             </Button>
           )}

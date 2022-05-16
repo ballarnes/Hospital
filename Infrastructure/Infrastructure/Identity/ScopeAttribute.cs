@@ -1,12 +1,15 @@
-namespace Infrastructure.Identity;
+using System;
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class ScopeAttribute : Attribute
+namespace Infrastructure.Identity
 {
-    public ScopeAttribute(string scopeName)
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class ScopeAttribute : Attribute
     {
-        ScopeName = scopeName;
-    }
+        public ScopeAttribute(string scopeName)
+        {
+            ScopeName = scopeName;
+        }
 
-    public string ScopeName { get; }
+        public string ScopeName { get; }
+    }
 }

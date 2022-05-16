@@ -1,4 +1,21 @@
-﻿namespace Hospital.UnitTests.Services
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Hospital.BusinessLogic.Services;
+using Hospital.BusinessLogic.Services.Interfaces;
+using Hospital.DataAccess.Data;
+using Hospital.DataAccess.Models.Dtos;
+using Hospital.DataAccess.Models.Entities;
+using Hospital.DataAccess.Repositories.Interfaces;
+using Infrastructure.Connection.Interfaces;
+using Moq;
+using Xunit;
+using AutoMapper;
+using FluentAssertions;
+
+namespace Hospital.UnitTests.Services
 {
     public class AppointmentServiceTests
     {
@@ -14,9 +31,9 @@
         {
             Id = 1,
             DoctorId = 1,
-            IntervalId = 1,
             OfficeId = 1,
-            Date = DateTime.MinValue,
+            StartDate = DateTime.MinValue,
+            EndDate = DateTime.MaxValue,
             PatientName = "test"
         };
 
@@ -56,9 +73,8 @@
             {
                 Id = _testAppointment.Id,
                 DoctorId = _testAppointment.DoctorId,
-                IntervalId = _testAppointment.IntervalId,
                 OfficeId = _testAppointment.OfficeId,
-                Date = _testAppointment.Date,
+                StartDate = _testAppointment.StartDate,
                 PatientName = _testAppointment.PatientName
             };
 
@@ -66,9 +82,8 @@
             {
                 Id = _testAppointment.Id,
                 DoctorId = _testAppointment.DoctorId,
-                IntervalId = _testAppointment.IntervalId,
                 OfficeId = _testAppointment.OfficeId,
-                Date = _testAppointment.Date,
+                StartDate = _testAppointment.StartDate,
                 PatientName = _testAppointment.PatientName
             };
 
@@ -134,9 +149,9 @@
             {
                 Id = _testAppointment.Id,
                 DoctorId = _testAppointment.DoctorId,
-                IntervalId = _testAppointment.IntervalId,
                 OfficeId = _testAppointment.OfficeId,
-                Date = _testAppointment.Date,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
                 PatientName = _testAppointment.PatientName
             };
 
@@ -144,9 +159,9 @@
             {
                 Id = _testAppointment.Id,
                 DoctorId = _testAppointment.DoctorId,
-                IntervalId = _testAppointment.IntervalId,
                 OfficeId = _testAppointment.OfficeId,
-                Date = _testAppointment.Date,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
                 PatientName = _testAppointment.PatientName
             };
 
@@ -192,16 +207,35 @@
         }
 
         [Fact]
-        public async Task GetAppointmentById_Success()
+        public async Task GetAppointmentsByDoctorDate_Success()
         {
             // arrange
+            var testDoctorId = _testAppointment.DoctorId;
+            var testTotalCount = 1;
+            var testDate = _testAppointment.StartDate;
+
+            var appointmentsSuccess = new List<Appointment>()
+            {
+                new Appointment()
+                {
+                    Id = _testAppointment.Id,
+                    DoctorId = _testAppointment.DoctorId,
+                    Doctor = _testAppointment.Doctor,
+                    StartDate = _testAppointment.StartDate,
+                    EndDate = _testAppointment.EndDate,
+                    OfficeId = _testAppointment.OfficeId,
+                    Office = _testAppointment.Office,
+                    PatientName = _testAppointment.PatientName
+                }
+            };
+
             var appointmentSuccess = new Appointment()
             {
                 Id = _testAppointment.Id,
                 DoctorId = _testAppointment.DoctorId,
-                IntervalId = _testAppointment.IntervalId,
                 OfficeId = _testAppointment.OfficeId,
-                Date = _testAppointment.Date,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
                 PatientName = _testAppointment.PatientName
             };
 
@@ -209,9 +243,68 @@
             {
                 Id = _testAppointment.Id,
                 DoctorId = _testAppointment.DoctorId,
-                IntervalId = _testAppointment.IntervalId,
                 OfficeId = _testAppointment.OfficeId,
-                Date = _testAppointment.Date,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
+                PatientName = _testAppointment.PatientName
+            };
+
+            _appointmentRepository.Setup(s => s.GetAppointmentsByDoctorDate(
+                It.Is<int>(i => i == testDoctorId),
+                It.Is<DateTime>(i => i == testDate))).ReturnsAsync(appointmentsSuccess);
+
+            _mapper.Setup(s => s.Map<AppointmentDto>(
+                It.Is<Appointment>(i => i.Equals(appointmentSuccess)))).Returns(appointmentDtoSuccess);
+
+            // act
+            var result = await _appointmentService.GetAppointmentsByDoctorDate(testDoctorId, testDate);
+
+            // assert
+            result.Should().NotBeNull();
+            result?.Data.Should().NotBeNull();
+            result?.TotalCount.Should().Be(testTotalCount);
+        }
+
+        [Fact]
+        public async Task GetAppointmentsByDoctorDate_Failed()
+        {
+            // arrange
+            Task<List<Appointment>>? testResult = null;
+            var testDoctorId = int.MaxValue;
+            var testDate = DateTime.MinValue;
+
+            _appointmentRepository.Setup(s => s.GetAppointmentsByDoctorDate(
+                It.Is<int>(i => i == testDoctorId),
+                It.Is<DateTime>(i => i == testDate))).Returns(testResult!);
+
+            // act
+            var result = await _appointmentService.GetAppointmentsByDoctorDate(testDoctorId, testDate);
+
+            // assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetAppointmentById_Success()
+        {
+            // arrange
+            var appointmentSuccess = new Appointment()
+            {
+                Id = _testAppointment.Id,
+                DoctorId = _testAppointment.DoctorId,
+                OfficeId = _testAppointment.OfficeId,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
+                PatientName = _testAppointment.PatientName
+            };
+
+            var appointmentDtoSuccess = new AppointmentDto()
+            {
+                Id = _testAppointment.Id,
+                DoctorId = _testAppointment.DoctorId,
+                OfficeId = _testAppointment.OfficeId,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
                 PatientName = _testAppointment.PatientName
             };
 
@@ -228,9 +321,9 @@
             result.Should().NotBeNull();
             result?.Id.Should().Be(_testAppointment.Id);
             result?.DoctorId.Should().Be(_testAppointment.DoctorId);
-            result?.IntervalId.Should().Be(_testAppointment.IntervalId);
             result?.OfficeId.Should().Be(_testAppointment.OfficeId);
-            result?.Date.Should().Be(_testAppointment.Date);
+            result?.StartDate.Should().Be(_testAppointment.StartDate);
+            result?.EndDate.Should().Be(_testAppointment.EndDate);
             result?.PatientName.Should().Be(_testAppointment.PatientName);
         }
 
@@ -259,12 +352,12 @@
             _appointmentRepository.Setup(s => s.AddAppointment(
                 It.IsAny<int>(),
                 It.IsAny<int>(),
-                It.IsAny<int>(),
+                It.IsAny<DateTime>(),
                 It.IsAny<DateTime>(),
                 It.IsAny<string>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _appointmentService.AddAppointment(_testAppointment.DoctorId, _testAppointment.IntervalId, _testAppointment.OfficeId, _testAppointment.Date, _testAppointment.PatientName);
+            var result = await _appointmentService.AddAppointment(_testAppointment.DoctorId, _testAppointment.OfficeId, _testAppointment.StartDate, _testAppointment.EndDate, _testAppointment.PatientName);
 
             // assert
             result.Should().NotBeNull();
@@ -280,12 +373,12 @@
             _appointmentRepository.Setup(s => s.AddAppointment(
                 It.IsAny<int>(),
                 It.IsAny<int>(),
-                It.IsAny<int>(),
+                It.IsAny<DateTime>(),
                 It.IsAny<DateTime>(),
                 It.IsAny<string>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _appointmentService.AddAppointment(_testAppointment.DoctorId, _testAppointment.IntervalId, _testAppointment.OfficeId, _testAppointment.Date, _testAppointment.PatientName);
+            var result = await _appointmentService.AddAppointment(_testAppointment.DoctorId, _testAppointment.OfficeId, _testAppointment.StartDate, _testAppointment.EndDate, _testAppointment.PatientName);
 
             // assert
             result.Should().Be(testResult);
@@ -295,18 +388,23 @@
         public async Task UpdateAppointment_Success()
         {
             // arrange
+            var appointmentDtoSuccess = new AppointmentDto()
+            {
+                Id = _testAppointment.Id,
+                DoctorId = _testAppointment.DoctorId,
+                OfficeId = _testAppointment.OfficeId,
+                StartDate = _testAppointment.StartDate,
+                EndDate = _testAppointment.EndDate,
+                PatientName = _testAppointment.PatientName
+            };
+
             var testResult = 1;
 
             _appointmentRepository.Setup(s => s.UpdateAppointment(
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<string>())).ReturnsAsync(testResult);
+                It.IsAny<Appointment>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _appointmentService.UpdateAppointment(_testAppointment.Id, _testAppointment.DoctorId, _testAppointment.IntervalId, _testAppointment.OfficeId, _testAppointment.Date, _testAppointment.PatientName);
+            var result = await _appointmentService.UpdateAppointment(appointmentDtoSuccess);
 
             // assert
             result.Should().Be(testResult);
@@ -316,18 +414,23 @@
         public async Task UpdateAppointment_Failed()
         {
             // arrange
+            var appointmentDtoFailed = new AppointmentDto()
+            {
+                Id = int.MinValue,
+                DoctorId = int.MinValue,
+                OfficeId = int.MinValue,
+                StartDate = DateTime.MinValue,
+                EndDate = DateTime.MinValue,
+                PatientName = string.Empty
+            };
+
             int? testResult = null;
 
             _appointmentRepository.Setup(s => s.UpdateAppointment(
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<DateTime>(),
-                It.IsAny<string>())).ReturnsAsync(testResult);
+                It.IsAny<Appointment>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _appointmentService.UpdateAppointment(_testAppointment.Id, _testAppointment.DoctorId, _testAppointment.IntervalId, _testAppointment.OfficeId, _testAppointment.Date, _testAppointment.PatientName);
+            var result = await _appointmentService.UpdateAppointment(appointmentDtoFailed);
 
             // assert
             result.Should().Be(testResult);

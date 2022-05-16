@@ -14,7 +14,7 @@ configure({
 })
 
 const oidcConfig = {
-    authority: "http://localhost:5002/",
+    authority: "http://localhost:5000/",
     client_id: "hospitalui_pkce",
     client_secret: 'secret',
     redirect_uri: "http://localhost:5001/",

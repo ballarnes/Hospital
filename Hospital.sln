@@ -5,33 +5,38 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.UnitTests", "Hospital.UnitTests\Hospital.UnitTests.csproj", "{5F704BDB-A614-4713-AE44-98201F08B226}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hospital", "Hospital", "{F764B46E-D6BC-49F5-ABDA-EC24EC7FC5AD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{622C16E5-7B16-4851-B8A3-584A0B0B07AD}"
-	ProjectSection(SolutionItems) = preProject
-		SolutionItems\10_DeleteDoctors.sql = SolutionItems\10_DeleteDoctors.sql
-		SolutionItems\11_DeleteAppointments.sql = SolutionItems\11_DeleteAppointments.sql
-		SolutionItems\1_CreateTables.sql = SolutionItems\1_CreateTables.sql
-		SolutionItems\2_AddOrUpdateOffices.sql = SolutionItems\2_AddOrUpdateOffices.sql
-		SolutionItems\3_AddOrUpdateIntervals.sql = SolutionItems\3_AddOrUpdateIntervals.sql
-		SolutionItems\4_AddOrUpdateSpecializations.sql = SolutionItems\4_AddOrUpdateSpecializations.sql
-		SolutionItems\5_AddOrUpdateDoctors.sql = SolutionItems\5_AddOrUpdateDoctors.sql
-		SolutionItems\6_AddOrUpdateAppointments.sql = SolutionItems\6_AddOrUpdateAppointments.sql
-		SolutionItems\7_DeleteOffices.sql = SolutionItems\7_DeleteOffices.sql
-		SolutionItems\8_DeleteIntervals.sql = SolutionItems\8_DeleteIntervals.sql
-		SolutionItems\9_DeleteSpecializations.sql = SolutionItems\9_DeleteSpecializations.sql
-		SolutionItems\log4net.config = SolutionItems\log4net.config
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityServer", "{0A2B7CCB-16C6-46EC-978D-F8063D9A7224}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer\IdentityServer.csproj", "{0EADE00A-F0FD-4732-B15A-AD2482BEB7C7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastucture", "Infrastucture", "{6922932D-82BA-4C87-8F97-011826A88ACB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure\Infrastructure.csproj", "{061D6A40-D0DC-4540-866C-FF5D23DB8509}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Host", "Hospital.Host\Hospital.Host.csproj", "{B37CA2B1-8C64-4078-99F3-54BADA1624A3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hospital.Host", "Hospital.Host", "{D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.PresentationLogic", "Hospital.Host\Hospital.PresentationLogic\Hospital.PresentationLogic.csproj", "{D5DE932B-5EAD-470F-B801-219EBD228C4D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.BusinessLogic", "Hospital.Host\Hospital.BusinessLogic\Hospital.BusinessLogic.csproj", "{CC0B6BF5-CA30-41F2-AA8C-968CEC0E9FA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.DataAccess", "Hospital.Host\Hospital.DataAccess\Hospital.DataAccess.csproj", "{7023A4FB-86B9-4FA2-BB45-83817025CB41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.DatabaseInitialization", "Hospital.Host\Hospital.DatabaseInitialization\Hospital.DatabaseInitialization.csproj", "{994A3817-964D-43F0-BD81-EB2BB534C052}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagrams", "Diagrams", "{9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Class Diagram", "Class Diagram", "{D8A39BD8-868E-4BCE-9CD8-3CD9A567909C}"
+	ProjectSection(SolutionItems) = preProject
+		Diagrams\Class Diagram\Hospital.BusinessLogic.png = Diagrams\Class Diagram\Hospital.BusinessLogic.png
+		Diagrams\Class Diagram\Hospital.DataAccess.png = Diagrams\Class Diagram\Hospital.DataAccess.png
+		Diagrams\Class Diagram\Hospital.PresentationLogic.png = Diagrams\Class Diagram\Hospital.PresentationLogic.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Use Case Diagram", "Use Case Diagram", "{8D7FF10A-AD5F-47B6-9033-D49F70153BCA}"
+	ProjectSection(SolutionItems) = preProject
+		Diagrams\Use Case Diagram\Use Case Diagram.png = Diagrams\Use Case Diagram\Use Case Diagram.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database Diagram", "Database Diagram", "{17627EC3-8B9B-48EB-AF08-8E4CF4731282}"
+	ProjectSection(SolutionItems) = preProject
+		Diagrams\Database Diagram\Database Diagram.png = Diagrams\Database Diagram\Database Diagram.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,27 +48,40 @@ Global
 		{5F704BDB-A614-4713-AE44-98201F08B226}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F704BDB-A614-4713-AE44-98201F08B226}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F704BDB-A614-4713-AE44-98201F08B226}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EADE00A-F0FD-4732-B15A-AD2482BEB7C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EADE00A-F0FD-4732-B15A-AD2482BEB7C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EADE00A-F0FD-4732-B15A-AD2482BEB7C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EADE00A-F0FD-4732-B15A-AD2482BEB7C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{061D6A40-D0DC-4540-866C-FF5D23DB8509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{061D6A40-D0DC-4540-866C-FF5D23DB8509}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{061D6A40-D0DC-4540-866C-FF5D23DB8509}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{061D6A40-D0DC-4540-866C-FF5D23DB8509}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B37CA2B1-8C64-4078-99F3-54BADA1624A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B37CA2B1-8C64-4078-99F3-54BADA1624A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B37CA2B1-8C64-4078-99F3-54BADA1624A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B37CA2B1-8C64-4078-99F3-54BADA1624A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5DE932B-5EAD-470F-B801-219EBD228C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5DE932B-5EAD-470F-B801-219EBD228C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5DE932B-5EAD-470F-B801-219EBD228C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5DE932B-5EAD-470F-B801-219EBD228C4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC0B6BF5-CA30-41F2-AA8C-968CEC0E9FA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC0B6BF5-CA30-41F2-AA8C-968CEC0E9FA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC0B6BF5-CA30-41F2-AA8C-968CEC0E9FA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC0B6BF5-CA30-41F2-AA8C-968CEC0E9FA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7023A4FB-86B9-4FA2-BB45-83817025CB41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7023A4FB-86B9-4FA2-BB45-83817025CB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7023A4FB-86B9-4FA2-BB45-83817025CB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7023A4FB-86B9-4FA2-BB45-83817025CB41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{994A3817-964D-43F0-BD81-EB2BB534C052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{994A3817-964D-43F0-BD81-EB2BB534C052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{994A3817-964D-43F0-BD81-EB2BB534C052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{994A3817-964D-43F0-BD81-EB2BB534C052}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5F704BDB-A614-4713-AE44-98201F08B226} = {F764B46E-D6BC-49F5-ABDA-EC24EC7FC5AD}
-		{0EADE00A-F0FD-4732-B15A-AD2482BEB7C7} = {0A2B7CCB-16C6-46EC-978D-F8063D9A7224}
+		{5F704BDB-A614-4713-AE44-98201F08B226} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
 		{061D6A40-D0DC-4540-866C-FF5D23DB8509} = {6922932D-82BA-4C87-8F97-011826A88ACB}
-		{B37CA2B1-8C64-4078-99F3-54BADA1624A3} = {F764B46E-D6BC-49F5-ABDA-EC24EC7FC5AD}
+		{D5DE932B-5EAD-470F-B801-219EBD228C4D} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
+		{CC0B6BF5-CA30-41F2-AA8C-968CEC0E9FA1} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
+		{7023A4FB-86B9-4FA2-BB45-83817025CB41} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
+		{994A3817-964D-43F0-BD81-EB2BB534C052} = {D33DEDDF-2135-4CFA-8DFD-EC6C5E0DAD03}
+		{D8A39BD8-868E-4BCE-9CD8-3CD9A567909C} = {9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}
+		{8D7FF10A-AD5F-47B6-9033-D49F70153BCA} = {9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}
+		{17627EC3-8B9B-48EB-AF08-8E4CF4731282} = {9E28B7C1-F5A4-4E36-9223-31AA46C1AF36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1AD2502-D55E-4296-ADFE-AF745162AB8A}

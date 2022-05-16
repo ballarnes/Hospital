@@ -1,4 +1,21 @@
-﻿namespace Hospital.UnitTests.Services
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Hospital.BusinessLogic.Services;
+using Hospital.BusinessLogic.Services.Interfaces;
+using Hospital.DataAccess.Data;
+using Hospital.DataAccess.Models.Dtos;
+using Hospital.DataAccess.Models.Entities;
+using Hospital.DataAccess.Repositories.Interfaces;
+using Infrastructure.Connection.Interfaces;
+using Moq;
+using Xunit;
+using AutoMapper;
+using FluentAssertions;
+
+namespace Hospital.UnitTests.Services
 {
     public class SpecializationServiceTests
     {
@@ -190,15 +207,20 @@
         public async Task UpdateSpecialization_Success()
         {
             // arrange
+            var specializationDtoSuccess = new SpecializationDto()
+            {
+                Id = _testSpecialization.Id,
+                Name = _testSpecialization.Name,
+                Description = _testSpecialization.Description
+            };
+
             var testResult = 1;
 
             _specializationRepository.Setup(s => s.UpdateSpecialization(
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<string>())).ReturnsAsync(testResult);
+                It.IsAny<Specialization>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _specializationService.UpdateSpecialization(_testSpecialization.Id, _testSpecialization.Name, _testSpecialization.Description);
+            var result = await _specializationService.UpdateSpecialization(specializationDtoSuccess);
 
             // assert
             result.Should().Be(testResult);
@@ -208,15 +230,20 @@
         public async Task UpdateSpecialization_Failed()
         {
             // arrange
+            var specializationDtoFailed = new SpecializationDto()
+            {
+                Id = int.MinValue,
+                Name = String.Empty,
+                Description = String.Empty
+            };
+
             int? testResult = null;
 
             _specializationRepository.Setup(s => s.UpdateSpecialization(
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<string>())).ReturnsAsync(testResult);
+                It.IsAny<Specialization>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _specializationService.UpdateSpecialization(_testSpecialization.Id, _testSpecialization.Name, _testSpecialization.Description);
+            var result = await _specializationService.UpdateSpecialization(specializationDtoFailed);
 
             // assert
             result.Should().Be(testResult);

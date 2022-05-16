@@ -1,8 +1,9 @@
-namespace Infrastructure.Identity;
-
-public static class AuthScheme
+namespace Infrastructure.Identity
 {
-    public const string Internal = "Internal";
+    public static class AuthScheme
+    {
+        public const string Internal = "Internal";
 
-    public const string Site = "Site";
+        public const string Site = "Site";
+    }
 }

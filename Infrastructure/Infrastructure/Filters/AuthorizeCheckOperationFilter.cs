@@ -1,36 +1,39 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Infrastructure.Filters;
-
-public class AuthorizeCheckOperationFilter : IOperationFilter
+namespace Infrastructure.Filters
 {
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    public class AuthorizeCheckOperationFilter : IOperationFilter
     {
-        // Check for authorize attribute
-        var hasAuthorize = context.MethodInfo.DeclaringType != null && (context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any() ||
-                                                                        context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any());
-
-        if (!hasAuthorize)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            return;
-        }
+            // Check for authorize attribute
+            var hasAuthorize = context.MethodInfo.DeclaringType != null && (context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any() ||
+                                                                            context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any());
 
-        operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
-        operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
+            if (!hasAuthorize)
+            {
+                return;
+            }
 
-        var oAuthScheme = new OpenApiSecurityScheme
-        {
-            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
-        };
+            operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
+            operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
 
-        operation.Security = new List<OpenApiSecurityRequirement>
+            var oAuthScheme = new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
+            };
+
+            operation.Security = new List<OpenApiSecurityRequirement>
             {
                 new OpenApiSecurityRequirement
                 {
                     [oAuthScheme] = new[] { "swagger" }
                 }
             };
+        }
     }
 }

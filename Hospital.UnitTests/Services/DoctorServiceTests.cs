@@ -1,4 +1,20 @@
-﻿namespace Hospital.UnitTests.Services
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Hospital.BusinessLogic.Services;
+using Hospital.BusinessLogic.Services.Interfaces;
+using Hospital.DataAccess.Data;
+using Hospital.DataAccess.Models.Dtos;
+using Hospital.DataAccess.Models.Entities;
+using Hospital.DataAccess.Repositories.Interfaces;
+using Infrastructure.Connection.Interfaces;
+using Moq;
+using Xunit;
+using AutoMapper;
+using FluentAssertions;
+
+namespace Hospital.UnitTests.Services
 {
     public class DoctorServiceTests
     {
@@ -270,16 +286,21 @@
         public async Task UpdateDoctor_Success()
         {
             // arrange
+            var doctorDtoSuccess = new DoctorDto()
+            {
+                Id = _testDoctor.Id,
+                Name = _testDoctor.Name,
+                Surname = _testDoctor.Surname,
+                SpecializationId = _testDoctor.SpecializationId
+            };
+
             var testResult = 1;
 
             _doctorRepository.Setup(s => s.UpdateDoctor(
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>())).ReturnsAsync(testResult);
+                It.IsAny<Doctor>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _doctorService.UpdateDoctor(_testDoctor.Id, _testDoctor.Name, _testDoctor.Surname, _testDoctor.SpecializationId);
+            var result = await _doctorService.UpdateDoctor(doctorDtoSuccess);
 
             // assert
             result.Should().Be(testResult);
@@ -289,16 +310,21 @@
         public async Task UpdateDoctor_Failed()
         {
             // arrange
+            var doctorDtoFailed = new DoctorDto()
+            {
+                Id = int.MinValue,
+                Name = string.Empty,
+                Surname = string.Empty,
+                SpecializationId = int.MinValue
+            };
+
             int? testResult = null;
 
             _doctorRepository.Setup(s => s.UpdateDoctor(
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int>())).ReturnsAsync(testResult);
+                It.IsAny<Doctor>())).ReturnsAsync(testResult);
 
             // act
-            var result = await _doctorService.UpdateDoctor(_testDoctor.Id, _testDoctor.Name, _testDoctor.Surname, _testDoctor.SpecializationId);
+            var result = await _doctorService.UpdateDoctor(doctorDtoFailed);
 
             // assert
             result.Should().Be(testResult);
